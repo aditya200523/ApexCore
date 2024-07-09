@@ -193,10 +193,30 @@ Two types of construct : 1. for loop    2. if else   3. case
 
 
 (15) VERILOG BLOCK STATEMENTS 
+There ae two ways to group a set of statements that are syntactically equivalent to a single statement, this is block statements.
+Two types : Sequential and Parallel
+1. Sequential : Wrapped using begin and end and executed sequentially, one after the other 
+2. Parallel : Statements executed concurrently and the delay control used for time-ordering of assignments. Wrapped between within fork and join keywords. 
+Both blocks can be added by  
+![[Pasted image 20240706105515.png]]
 
 
 
+(16) VEILOG ASSIGNMENTS
+Placing values on nets and variables is assignment. Three types: 
+1. Procedural 
+2. Continuous
+3. Procedural Continuous
+![[Pasted image 20240706105923.png]]
+Procedural : With procedures like always, initial, task and functions. Assignment does not have a duration and holds until next assignment to same variable happen. Variable declaration assignment to an array not allowed
 
+Continuous Assignment : Used on scalar and vector nets and happens whenever there is change in RHS. Used in combinational logic without specifying gate interconnection.
+
+Procedural Continuous Assignment 
+
+
+
+(17) 
 
 
 
