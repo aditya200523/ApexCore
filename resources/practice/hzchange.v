@@ -16,23 +16,58 @@ module One100Mhz_to_25Mhz (input clk, output reg clk_out);
     end
 endmodule
 
+module Two100Mhz_to_434Khz (input clk, output reg clk_out);
+    parameter DIV_FACTOR = 230;
+    reg [7:0] counter = 0;
 
+    initial begin
+        counter = 0;
+        clk_out = 0;
+    end
 
-module tb;
-    reg clk;
-    wire clk_out;
-    One100Mhz_to_25Mhz u0 ( .clk(clk), .clk_out(clk_out));
-    initial begin
-        clk <= 0;
-    end
-    initial begin
-    clk = 0;
-    repeat(25) begin
-        #1 clk = clk + 1'b1;
-        $display("100Mhz to 25 Mhz clk = %b, Time = %0t, clk_out = %b", clk, $time, clk_out);
-        $display("100Mhz to 434Khz");
-    end
-    $finish;
+    always @ (posedge clk) begin 
+        if (counter == DIV_FACTOR / 2 - 1) begin
+            clk_out <= ~clk_out;
+            counter <= 0;
+        end else begin
+            counter <= counter + 1;
+        end
     end
 endmodule
 
+module Three100Mhz_to_625Khz (input clk, output reg clk_out);
+    parameter DIV_FACTOR = 160;
+    reg [7:0] counter = 0;
+
+    initial begin
+        counter = 0;
+        clk_out = 0;
+    end
+
+    always @ (posedge clk) begin
+        if (counter == DIV_FACTOR / 2 ) begin 
+            clk_out <= ~clk_out;
+            counter <= 0;
+        end else begin
+            counter <= counter + 1;
+        end
+    end
+endmodule
+
+module Four100Mhz_to_596Khz (input clk, output reg clk_out);
+    parameter DIV_FACTOR = 168;
+    reg [7:0] counter = 0;
+
+    initial begin
+        counter = 0;
+        clk_out = 0;
+    end
+    always @ (posedge clk) begin
+        if (counter == DIV_FACTOR/2 - 1) begin
+            clk_out <= ~clk_out;
+            counter <= 0;
+        end else begin
+            counter <= counter + 1;
+        end
+    end
+endmodule
