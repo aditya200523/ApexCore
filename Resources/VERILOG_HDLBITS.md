@@ -1,4 +1,35 @@
+module tb;  
+  parameter N = 4;  
+  
+  
+  reg clk;  
+  reg rstn;  
+  wire [1:0] out;  
+  
+  modN_ctr u0  (    .clk(clk),  
+                    .rstn(rstn),  
+                    .out(out));  
+  
+  always #10 clk = ~clk;  
+  
+  initial begin  
+    $dumpfile("dump.vcd");
+    $dumpvars(1);
+    {clk, rstn} <= 0;  
+  
+    $monitor ("T=%0t rstn=%0b out=0x%0h", $time, rstn, out);  
+    repeat(2) @ (posedge clk);  
+    rstn <= 1;  
+  
+    repeat(20) @ (posedge clk);  
+    $finish;  
+  end  
+endmodule  
+                    .out(out));  
 
+
+
+					
 (1) BASICS 
 1. WIRE : Directional in verilog. Information flows only in one direction.  assign left_side=right_side; the value of signal on right side is driven onto the left_side. 
 
@@ -518,5 +549,63 @@ endmodule
 
 
 ```
+
+5.  ![[Pasted image 20240710115927.png]]
+```
+module top_module(
+    input in,
+    input [1:0] state,
+    output [1:0] next_state,
+    output out); //
+
+    parameter A=0, B=1, C=2, D=3;
+
+    // State transition logic: next_state = f(state, in)
+    
+    always @(*) begin 
+        case(state)
+        A : next_state = (in ==1 ) ? B : A;
+        B : next_state = (in == 1) ? B : C;
+        C : next_state = (in == 1) ? D : A;
+        D : next_state = (in == 1) ? B : C;
+        endcase 
+    end
+    assign out = (state == D);
+        
+
+    // Output logic:  out = f(state) for a Moore state machine
+endmodule
+
+```
+
+module tb;  
+  parameter N = 4;  
+  
+  
+  reg clk;  
+  reg rstn;  
+  wire [1:0] out;  
+  
+  modN_ctr u0  (    .clk(clk),  
+                    .rstn(rstn),  
+                    .out(out));  
+  
+  always #10 clk = ~clk;  
+  
+  initial begin  
+    $dumpfile("dump.vcd");
+    $dumpvars(1);
+    {clk, rstn} <= 0;  
+  
+    $monitor ("T=%0t rstn=%0b out=0x%0h", $time, rstn, out);  
+    repeat(2) @ (posedge clk);  
+    rstn <= 1;  
+  
+    repeat(20) @ (posedge clk);  
+    $finish;  
+  end  
+endmodule  
+
+
 
 
