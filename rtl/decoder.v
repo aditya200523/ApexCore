@@ -43,7 +43,8 @@ wire [6:0]func7;
                 is_s_instr ? {  {21{instr[31]}},  instr[30:25],  instr[11:7]  } :
                 is_b_instr ? {  {19{1'b0}}, instr[31],  instr[7], instr[30:25], instr[11:8], 1'b0 } :
                 is_u_instr ? {  instr[31:12]  } :
-                is_j_instr ? {  {13{instr[31]}},  instr[19:12], instr[20], instr[30:25], instr[24:21], 1'b0  } : 32'b0;
+                is_j_instr ? {  {13{instr[31]}},  instr[19:12], instr[20], instr[30:25], instr[24:21], 1'b0  } : 
+                32'b0;
                 
    
 assign out_signal[0]=(is_r_instr&&(func3==3'h0)&&(func7==7'h00))? 1'b1 : 1'b0; //add

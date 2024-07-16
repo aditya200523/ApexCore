@@ -4,6 +4,7 @@
 *.o
 %.elf
 %.bin
+*.v.out
 
 #ignore obsidian folder
 .obsidian/

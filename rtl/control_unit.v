@@ -5,14 +5,15 @@ module control_unit(
 	input [31:0] rs1_input,                                                                                     //rs2 value from Rfile
 	input [31:0] imm,                                                                                           //immediate value from Rfile
 	input [31:0] mem_read,                                                                                      //read data from memory
-	input [36:0] out_signal,                                                                                    //instruction buss from decoder
+	input [46:0] out_signal,                                                                                    //instruction buss from decoder
 	input [6:0] opcode,                                                                                         //opcode for instructions from Rfile
 	input [31:0] pc_input,                                                                                      //input from PC(its output address) 
 	input [31:0] ALUoutput,                                                                                            //output from ALU
 	
 	output reg [36:0] instructions,                                                                             //instruction bus for ALU
 	output reg [31:0] mem_write,                                                                                //write data in memory
-	output reg wr_en,                                                                                           //write signal(enable or disable
+	output reg wr_en,                                                                                           //write signal(enable or disable)
+	output reg rd_en, 																							//read signal (enable or disable)
 	output reg [31:0] addr,                                                                                     //address for memory
 	output reg j_signal,                                                                                        //jump signal(enable or disable)
 	output reg [31:0] jump,                                                                                     //jump output for pc
@@ -31,11 +32,16 @@ initial begin
 	jump <= 0;
 	final_output <= 0;
 end	 
-
+assign Simm={{imm[31:12],{20{imm[11]}}},imm};
 always@(*) begin
 	case(opcode)
-		7'b0110011, 7'b0010011, 7'b0110111, 7'b0010111, 7'b0110111, 7'b0010111 : begin                                      //calling ALU
+		7'b0110011, 7'b0010011 : begin                                      //calling ALU
 			instructions <= out_signal;
+			if (opcode == 7'b0010011) begin
+				if (instructions ==  37'h20000 || 37'h40000)begin
+					final_output <= (rs1_input < Simm);
+				end
+			end
 			final_output <= ALUoutput;
 			wr_en_rf <= 2'b1;
 			if(j_signal==1) j_signal<=0;
@@ -162,7 +168,7 @@ always@(*) begin
 						j_signal <= 2'b0;
 					end
 							if(wr_en==1) wr_en<=0;
-                  end																				    //activate jump signal 
+                  end																		       //activate jump signal 
 			endcase
         end
         7'b1101111 : begin
@@ -181,20 +187,22 @@ always@(*) begin
             end
 				if(wr_en==1) wr_en<=0;
         end
-//        7'b0110111 : begin
-//			if(j_signal==1)j_signal<=0;
-//            if(out_signal == 37'h800000000) begin   
-//				final_output <= {imm[31:12],12'b0};                                                          //lui
-//            end
-//				if(wr_en==1) wr_en<=0;
-//        end
-//        7'b0010111 : begin
-//			if(j_signal==1)j_signal<=0;
-//            if(out_signal == 37'h1000000000) begin   
-//				final_output <= pc_input +{imm[31:12],12'b0};                                             //auipc 
-//            end   
-//				if(wr_en==1) wr_en<=0;				
-  //      end
+       
+		7'b0110111 : begin
+			if(j_signal==1)j_signal<=0;
+            if(out_signal == 37'h800000000) begin   
+				final_output <= {imm[31:12],12'b0};                                                          //lui
+            end
+				if(wr_en==1) wr_en<=0;
+        end
+        7'b0010111 : begin
+			if(j_signal==1)j_signal<=0;
+            if(out_signal == 37'h1000000000) begin   
+				final_output <= pc_input +{imm[31:12],12'b0};                                             //auipc 
+            end   
+				if(wr_en==1) wr_en<=0;				
+	  	end 
+
     endcase
 end
 endmodule 

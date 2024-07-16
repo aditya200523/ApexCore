@@ -22,16 +22,14 @@ module ALU_tb;
     reg clk;
     reg [31:0] rs1;
     reg [31:0] rs2;
-    reg [11:0] imm;
     reg [46:0] instructions; //subjected to change
     wire [31:0] ALUoutput; 
 
-    ALU ALU1( .clk(clk), .rs1(rs1), .rs2(rs2), .imm(imm), .instructions(instructions), .ALUoutput(ALUoutput));
+    alu ALU1(.clk(clk), .v1(rs1), .v2(rs2), .instructions(instructions), .ALUoutput(ALUoutput));
     
     initial clk = 0;
     initial rs1 = 5'd5;
     initial rs2 = 5'd4;
-    initial imm = 12'd12;
     initial instructions = 47'b0;
     always #10 clk = ~clk;
     initial begin
