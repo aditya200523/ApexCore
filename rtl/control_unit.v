@@ -5,12 +5,14 @@ module control_unit(
 	input [31:0] rs1_input,                                                                                     //rs2 value from Rfile
 	input [31:0] imm,                                                                                           //immediate value from Rfile
 	input [31:0] mem_read,                                                                                      //read data from memory
-	input [46:0] out_signal,                                                                                    //instruction buss from decoder
+	input [36:0] out_signal,                                                                                    //instruction buss from decoder
 	input [6:0] opcode,                                                                                         //opcode for instructions from Rfile
 	input [31:0] pc_input,                                                                                      //input from PC(its output address) 
-	input [31:0] ALUoutput,                                                                                            //output from ALU
-	
-	output reg [36:0] instructions,                                                                             //instruction bus for ALU
+	input [31:0] ALUoutput,                                                                                     //output from ALU
+
+	output reg [36:0] instructions,																				//instruction bus for ALU																									
+	output reg [31:0] v1,																						//value going into ALU																													
+	output reg [31:0] v2,						    	                                 						//value going into ALU                         
 	output reg [31:0] mem_write,                                                                                //write data in memory
 	output reg wr_en,                                                                                           //write signal(enable or disable)
 	output reg rd_en, 																							//read signal (enable or disable)
@@ -35,20 +37,31 @@ end
 assign Simm={{imm[31:12],{20{imm[11]}}},imm};
 always@(*) begin
 	case(opcode)
-		7'b0110011, 7'b0010011 : begin                                      //calling ALU
+/*		7'b0110011, 7'b0010011 : begin                                      //calling ALU
 			instructions <= out_signal;
 			if (opcode == 7'b0010011) begin
 				if (instructions ==  37'h20000 || 37'h40000)begin
-					final_output <= (rs1_input < Simm);
+					final_output <= ALUoutput
 				end
 			end
 			final_output <= ALUoutput;
 			wr_en_rf <= 2'b1;
 			if(j_signal==1) j_signal<=0;
 			if(wr_en==1) wr_en<=0;
+			*/
+		7'b0010011 : begin
+			instructions <= out_signal;
+			if (instructions == 37'h20000 || 37'h40000)begin
+				v1 <= rs1_input;
+				v2 <= Simm;
+			end else begin
+				v1 <= rs1_input;
+				v2 <= imm;
+			end
+			final_output <= ALUoutput;
         end
         7'b0000011 : begin                                                                          // mem read set
-			addr <= rs1_input + imm;																						//sending required address
+			addr <= v1 + imm;																						//sending required address
 			mem_count <= addr % 4;
 			case(out_signal) 
 				37'h80000 :begin

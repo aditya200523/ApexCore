@@ -4,7 +4,7 @@ input clk,
 input [31:0] v1,
 input [31:0] v2,
 //input [31:0] imm,
-input [46:0] instructions,
+input [36:0] instructions,
 output reg [31:0] ALUoutput
 );
 	initial begin

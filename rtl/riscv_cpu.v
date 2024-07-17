@@ -39,8 +39,9 @@ wire	[31:0] SYNTHESIZED_WIRE_17;
 wire	[31:0] SYNTHESIZED_WIRE_18;
 wire	[4:0] SYNTHESIZED_WIRE_19;
 wire	[4:0] SYNTHESIZED_WIRE_20;
+wire 	[31:0] SYNTHESIZED_WIRE_4;
+wire 	[31:0] SYNTHESIZED_WIRE_5;
 
-assign	PC = SYNTHESIZED_WIRE_22;
 
 
 
@@ -54,11 +55,9 @@ PC	b2v_inst(
 
 
 alu	b2v_inst1(
-	.imm(SYNTHESIZED_WIRE_21),
 	.instructions(SYNTHESIZED_WIRE_3),
-	.pc_input(SYNTHESIZED_WIRE_22),
-	.rs1(SYNTHESIZED_WIRE_23),
-	.rs2(SYNTHESIZED_WIRE_24),
+	.v1(SYNTHESIZED_WIRE_4),
+	.v2(SYNTHESIZED_WIRE_5),
 	.ALUoutput(SYNTHESIZED_WIRE_7));
 
 
@@ -79,6 +78,8 @@ control_unit	b2v_inst2(
 	.addr(Mem_WrAddr),
 	.final_output(SYNTHESIZED_WIRE_18),
 	.instructions(SYNTHESIZED_WIRE_3),
+	.v1(SYNTHESIZED_WIRE_4),
+	.v2(SYNTHESIZED_WIRE_5),
 	.jump(SYNTHESIZED_WIRE_1),
 	.mem_write(Mem_WrData));
 

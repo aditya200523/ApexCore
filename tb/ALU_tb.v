@@ -22,7 +22,7 @@ module ALU_tb;
     reg clk;
     reg [31:0] rs1;
     reg [31:0] rs2;
-    reg [46:0] instructions; //subjected to change
+    reg [36:0] instructions; //subjected to change
     wire [31:0] ALUoutput; 
 
     alu ALU1(.clk(clk), .v1(rs1), .v2(rs2), .instructions(instructions), .ALUoutput(ALUoutput));
