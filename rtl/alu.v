@@ -13,7 +13,7 @@ output reg [31:0] ALUoutput
 	always@(*) begin
 	
     case(instructions) 
-		   37'h1: ALUoutput <= v1 + v2;     	//add                                    //add
+		   37'h0: ALUoutput <= v1 + v2;     	//add                                    //add
          37'h2  : ALUoutput <= v1 - v2;        //sub                          //sub
          37'h4 || 37'h800: ALUoutput <= v1 ^ v2;        //xor                               //xor
          37'h8 || 37'h1000: ALUoutput <= v1 | v2;        //or                               //or

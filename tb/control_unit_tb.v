@@ -9,22 +9,23 @@ reg [31:0] rs2_input;
 reg [31:0] rs1_input;
 reg [31:0] imm;
 reg [31:0] mem_read;
-reg [46:0] out_signal;
+reg [36:0] out_signal;
 reg [6:0] opcode;
 reg [31:0] pc_input;
-reg ALUoutput;
-wire [46:0] instructions;                   
+reg [31:0] ALUoutput;
+wire [36:0] instructions;                   
 wire  [31:0] mem_write;
 wire wr_en;
-wire rd_en;
-wire addr;
+wire [31:0] addr;
 wire j_signal;
 wire [31:0] jump;
 wire [31:0] final_output;
+wire [31:0] v1;
+wire [31:0] v2;
 
 control_unit control_unit1 (.clk(clk),.rst(rst),.rs2_input(rs2_input),.rs1_input(rs1_input),.imm(imm),.mem_read(mem_read),.out_signal(out_signal),
 									.opcode(opcode),.pc_input(pc_input), .ALUoutput(ALUoutput), .instructions(instructions), .mem_write(mem_write),
-									.wr_en(wr_en),.rd_en(rd_en),.addr(addr),.j_signal(j_signal),.jump(jump),.final_output(final_output));
+									.wr_en(wr_en),.addr(addr),.j_signal(j_signal),.jump(jump),.final_output(final_output),.v1(v1),.v2(v2));
 
 initial clk = 0;
 always #10 clk = ~clk;

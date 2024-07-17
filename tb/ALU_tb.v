@@ -19,6 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 module ALU_tb;
+    reg clk;
     reg [31:0] rs1;
     reg [31:0] rs2;
     reg [36:0] instructions; //subjected to change

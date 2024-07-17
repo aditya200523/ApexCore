@@ -55,6 +55,8 @@ always@(*) begin
 				v2 <= imm;
 			end
 			final_output <= ALUoutput;
+			if (j_signal == 1) j_signal <= 0;
+			if (wr_en == 1) wr_en <= 0;
         end
         7'b0000011 : begin                                                                          // mem read set
 			addr <= v1 + imm;																						//sending required address
