@@ -1,6 +1,5 @@
 
 module alu(
-input clk,
 input [31:0] v1,
 input [31:0] v2,
 //input [31:0] imm,
@@ -22,8 +21,8 @@ output reg [31:0] ALUoutput
          37'h20 || 37'h4000: ALUoutput <= v1 << v2[4:0]; //sll                               //sll
          37'h40 || 37'h8000: ALUoutput <= v1 >> v2[4:0]; //srl                               //srl
          37'h80 || 37'h10000: ALUoutput <= v1 >>> v2[4:0];  //sra                             //sra 
-         37'h100 : ALUoutput <= (v1 < v2);    //slt                               //slt
-         37'h200 : ALUoutput <= (v1 < v2);    //sltu                               //sltu
+         37'h100 || 37'h20000: ALUoutput <= (v1 < v2);    //slt                               //slt
+         37'h200 || 37'h40000: ALUoutput <= (v1 < v2);    //sltu                               //sltu
 /*         37'h400 : ALUoutput <= (rs1 + Simm);   //addi                               //addi
          37'h800 : ALUoutput <= (rs1 ^ Simm);   // xori                              //xori
          37'h1000 : ALUoutput <= (rs1 | Simm);  //ori                               //ori

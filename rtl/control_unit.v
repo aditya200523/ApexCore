@@ -15,7 +15,6 @@ module control_unit(
 	output reg [31:0] v2,						    	                                 						//value going into ALU                         
 	output reg [31:0] mem_write,                                                                                //write data in memory
 	output reg wr_en,                                                                                           //write signal(enable or disable)
-	output reg rd_en, 																							//read signal (enable or disable)
 	output reg [31:0] addr,                                                                                     //address for memory
 	output reg j_signal,                                                                                        //jump signal(enable or disable)
 	output reg [31:0] jump,                                                                                     //jump output for pc
@@ -37,21 +36,18 @@ end
 assign Simm={{imm[31:12],{20{imm[11]}}},imm};
 always@(*) begin
 	case(opcode)
-/*		7'b0110011, 7'b0010011 : begin                                      //calling ALU
+		7'b0110011 : begin                                      //calling ALU
 			instructions <= out_signal;
-			if (opcode == 7'b0010011) begin
-				if (instructions ==  37'h20000 || 37'h40000)begin
-					final_output <= ALUoutput
-				end
-			end
+			v1 <= rs1_input;
+			v2 <= rs2_input;
 			final_output <= ALUoutput;
 			wr_en_rf <= 2'b1;
 			if(j_signal==1) j_signal<=0;
 			if(wr_en==1) wr_en<=0;
-			*/
+		end
 		7'b0010011 : begin
 			instructions <= out_signal;
-			if (instructions == 37'h20000 || 37'h40000)begin
+			if (instructions == 37'h20000 || 37'h40000 || 37'h400 || 37'h800 || 37'h1000 || 37'h2000)begin
 				v1 <= rs1_input;
 				v2 <= Simm;
 			end else begin
