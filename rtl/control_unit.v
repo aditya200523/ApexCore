@@ -10,7 +10,7 @@ module control_unit(
 	input [31:0] pc_input,                                                                                      //input from PC(its output address) 
 	input [31:0] ALUoutput,                                                                                     //output from ALU
 
-	output reg [36:0] instructions,																				//instruction bus for ALU																									
+	output reg [9:0] instructions,																				//instruction bus for ALU																									
 	output reg [31:0] v1,																						//value going into ALU																													
 	output reg [31:0] v2,						    	                                 						//value going into ALU                         
 	output reg [31:0] mem_write,                                                                                //write data in memory
@@ -36,7 +36,8 @@ end
 assign Simm={{imm[31:12],{20{imm[11]}}},imm};
 always@(*) begin
 	case(opcode)
-		7'b0110011 : begin                                      //calling ALU
+	/*
+		7'b0110011 || 7'b0010011 : begin                                      //calling ALU
 			instructions <= out_signal;
 			v1 <= rs1_input;
 			v2 <= rs2_input;
@@ -58,6 +59,45 @@ always@(*) begin
 			if (j_signal == 1) j_signal <= 0;
 			if (wr_en == 1) wr_en <= 0;
         end
+	*/
+
+		7'b0110011 || 7'b0010011 : begin
+			if (out_signal == 37'h0 || 37'h400)begin
+				instructions <= 10'd1;
+			end else if (out_signal == 37'h2) begin
+				instructions <= 10'd2;
+			end else if (out_signal == 37'h4 || 37'd800) begin
+				instructions <= 10'd4;
+			end else if (out_signal == 37'h8 || 37'h1000 )begin
+				instructions <= 10'd8;
+			end else if (out_signal == 37'h10 || 37'h2000) begin
+				instructions <= 10'd16;
+			end else if (out_signal == 37'h20 || 37'h4000) begin
+				instructions <= 10'd32;
+			end else if (out_signal == 37'h40 || 37'h8000) begin
+				instructions <= 10'd64;
+			end else if (out_signal == 37'h80 || 37'h10000)begin
+				instructions <= 10'd128;
+			end else if (out_signal == 37'h100 || 37'h20000)begin
+				instructions <= 10'd256;
+			end else if (out_signal == 37'h200 || 37'h40000)begin
+				instructions <= 10'd512;
+			end 
+			if (out_signal == 37'h20000 || 37'h40000 || 37'h400 || 37'h800 || 37'h1000 || 37'h2000) begin
+				v1 <= rs1_input;
+				v2 <= Simm;
+			end else if (out_signal == 37'h4000 || 37'h8000 || 37'h10000) begin
+				v1 <= rs1_input;
+				v2 <= imm;
+			end else begin
+				v1 <= rs1_input;
+				v2 <= rs2_input;
+			end
+			final_output <= ALUoutput;
+			if (j_signal == 1) j_signal <= 0;
+			if (wr_en == 1) wr_en <= 0;
+		end 
+
         7'b0000011 : begin                                                                          // mem read set
 			addr <= v1 + imm;																						//sending required address
 			mem_count <= addr % 4;
