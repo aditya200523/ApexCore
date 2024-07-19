@@ -5,12 +5,12 @@ module registerfile(
 	input [4:0]rs2,
 	input rs1_valid,
 	input rs2_valid,
-	input [31:0]rd,
+	input [31:0] rd,
 	input wr_en,
 	input [31:0]rd_value,
  
-	output reg [31:0]rs1_value,
-	output reg [31:0]rs2_value
+	output reg [31:0] rs1_value,
+	output reg [31:0] rs2_value
 );    
 	reg [31:0] register_file [31:0];
  
@@ -60,7 +60,7 @@ end
 
 always @(posedge clk) begin 
 	register_file[0]<=0;
-	if (wr_en&&rd[4:0]!=0) begin
+	if (wr_en == 1 && rd[4:0]!=0) begin
 		register_file[rd[4:0]]<=rd_value;
    end
 end 

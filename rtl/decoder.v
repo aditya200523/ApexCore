@@ -47,7 +47,7 @@ wire [6:0]func7;
                 32'b0;
                 
    
-assign out_signal[0]=(is_r_instr&&(func3==3'h0)&&(func7==7'h00))? 1'b1 : 1'b0; //add
+  assign out_signal[0]=(is_r_instr&&(func3==3'h0)&&(func7==7'h00))? 1'b1 : 1'b0; //add
   assign out_signal[1]=(is_r_instr&&(func3==3'h0)&&(func7==7'h20))? 1'b1 : 1'b0; //sub
   assign out_signal[2]=(is_r_instr&&(func3==3'h4)&&(func7==7'h00))? 1'b1 : 1'b0; //xor
   assign out_signal[3]=(is_r_instr&&(func3==3'h6)&&(func7==7'h0))? 1'b1 : 1'b0; //or

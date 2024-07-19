@@ -6,7 +6,7 @@ input [9:0] instructions,
 output reg [31:0] ALUoutput
 );
 	initial begin
-		ALUoutput = 0;
+		ALUoutput <= 0;
 	end	
 	
 	always@(*) begin
@@ -23,8 +23,6 @@ output reg [31:0] ALUoutput
          10'd256: ALUoutput <= (v1 < v2);    //slt                              
          10'd512: ALUoutput <= (v1 < v2);    //sltu                               
          default : ALUoutput <= 0;
-        
-		
 	endcase  
 end	
 endmodule 

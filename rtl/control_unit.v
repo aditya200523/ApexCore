@@ -5,7 +5,7 @@ module control_unit(
 	input [31:0] rs1_input,                                                                                     //rs2 value from Rfile
 	input [31:0] imm,                                                                                           //immediate value from Rfile
 	input [31:0] mem_read,                                                                                      //read data from memory
-	input [36:0] out_signal,                                                                                    //instruction buss from decoder
+	input [36:0] out_signal,                                                                                    //instruction bus from decoder
 	input [6:0] opcode,                                                                                         //opcode for instructions from Rfile
 	input [31:0] pc_input,                                                                                      //input from PC(its output address) 
 	input [31:0] ALUoutput,                                                                                     //output from ALU
@@ -21,7 +21,6 @@ module control_unit(
 	output reg [31:0] final_output,                                                                             //goes into Rfile as rd
 	output reg wr_en_rf
 	);
- reg [31:0] temp = 0;
  reg [1:0] mem_count = 0;
  wire [31:0] Simm = 0;
 
@@ -34,38 +33,15 @@ initial begin
 	addr<=0;
 	jump <= 0;
 	final_output <= 0;
+	v1 <= 0;
+	v2 <= 0;
 end	 
-assign Simm ={{imm[31:12],{20{imm[11]}}},imm};
+assign Simm ={};
 always@(*) begin
 	case(opcode)
-	/*
-		7'b0110011 || 7'b0010011 : begin                                      //calling ALU
-			instructions <= out_signal;
-			v1 <= rs1_input;
-			v2 <= rs2_input;
-			final_output <= ALUoutput;
-			wr_en_rf <= 2'b1;
-			if(j_signal==1) j_signal<=0;
-			if(wr_en==1) wr_en<=0;
-		end
-		7'b0010011 : begin
-			instructions <= out_signal;
-			if (instructions == 37'h20000 || 37'h40000 || 37'h400 || 37'h800 || 37'h1000 || 37'h2000)begin
-				v1 <= rs1_input;
-				v2 <= Simm;
-			end else begin
-				v1 <= rs1_input;
-				v2 <= imm;
-			end
-			final_output <= ALUoutput;
-			if (j_signal == 1) j_signal <= 0;
-			if (wr_en == 1) wr_en <= 0;
-        end
-	*/
-
 		7'b0110011, 7'b0010011 : begin
 			case (out_signal)
-				37'h0: begin
+				37'h1: begin
 					instructions <= 10'd1;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
@@ -86,13 +62,13 @@ always@(*) begin
 				37'h8: begin
 					instructions <= 10'd8;
 					v1 <= rs1_input;
-					v2 <= Simm;
+					v2 <= rs2_input;
 				end
 
 				37'h10: begin
 					instructions <= 10'd16;
 					v1 <= rs1_input;
-					v2 <= Simm;
+					v2 <= rs2_input;
 				end
 
 				37'h20: begin
@@ -128,7 +104,7 @@ always@(*) begin
 				37'h400: begin
 					instructions <= 10'd1;
 					v1 <= rs1_input;
-					v2 <= Simm;
+					v2 <= imm;
 				end
 
 				37'h800: begin
@@ -184,7 +160,6 @@ always@(*) begin
 					v2 <= rs2_input;
 				end
 			endcase
-
 			final_output <= ALUoutput;
 			if (j_signal == 1) j_signal <= 0;
 			if (wr_en == 1) wr_en <= 0;
