@@ -53,7 +53,8 @@ always@(*) begin
 	if (rs1_valid) 
 	rs1_value <= register_file[rs1[4:0]];
 	else rs1_value <= 0;
-	if (rs2_valid) rs2_value <= register_file[rs2[4:0]];
+	if (rs2_valid) 
+	rs2_value <= register_file[rs2[4:0]];
 	else rs2_value <= 0;
 end
 

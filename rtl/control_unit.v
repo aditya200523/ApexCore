@@ -12,17 +12,19 @@ module control_unit(
 
 	output reg [9:0] instructions,																				//instruction bus for ALU																									
 	output reg [31:0] v1,																						//value going into ALU																													
-	output reg [31:0] v2,						    	                                 						//value going into ALU                         
+	output reg [31:0] v2,					    	                                 						//value going into ALU                         
 	output reg [31:0] mem_write,                                                                                //write data in memory
 	output reg wr_en,                                                                                           //write signal(enable or disable)
 	output reg [31:0] addr,                                                                                     //address for memory
 	output reg j_signal,                                                                                        //jump signal(enable or disable)
 	output reg [31:0] jump,                                                                                     //jump output for pc
-	output reg [31:0] final_output,                                                                              //goes into Rfile as rd
+	output reg [31:0] final_output,                                                                             //goes into Rfile as rd
 	output reg wr_en_rf
-);
+	);
  reg [31:0] temp = 0;
  reg [1:0] mem_count = 0;
+ wire [31:0] Simm = 0;
+
 initial begin 
 	wr_en_rf <= 0;
 	wr_en <= 0;
@@ -33,7 +35,7 @@ initial begin
 	jump <= 0;
 	final_output <= 0;
 end	 
-assign Simm={{imm[31:12],{20{imm[11]}}},imm};
+assign Simm ={{imm[31:12],{20{imm[11]}}},imm};
 always@(*) begin
 	case(opcode)
 	/*
@@ -61,43 +63,132 @@ always@(*) begin
         end
 	*/
 
-		7'b0110011 || 7'b0010011 : begin
-			if (out_signal == 37'h0 || 37'h400)begin
-				instructions <= 10'd1;
-			end else if (out_signal == 37'h2) begin
-				instructions <= 10'd2;
-			end else if (out_signal == 37'h4 || 37'd800) begin
-				instructions <= 10'd4;
-			end else if (out_signal == 37'h8 || 37'h1000 )begin
-				instructions <= 10'd8;
-			end else if (out_signal == 37'h10 || 37'h2000) begin
-				instructions <= 10'd16;
-			end else if (out_signal == 37'h20 || 37'h4000) begin
-				instructions <= 10'd32;
-			end else if (out_signal == 37'h40 || 37'h8000) begin
-				instructions <= 10'd64;
-			end else if (out_signal == 37'h80 || 37'h10000)begin
-				instructions <= 10'd128;
-			end else if (out_signal == 37'h100 || 37'h20000)begin
-				instructions <= 10'd256;
-			end else if (out_signal == 37'h200 || 37'h40000)begin
-				instructions <= 10'd512;
-			end 
-			if (out_signal == 37'h20000 || 37'h40000 || 37'h400 || 37'h800 || 37'h1000 || 37'h2000) begin
-				v1 <= rs1_input;
-				v2 <= Simm;
-			end else if (out_signal == 37'h4000 || 37'h8000 || 37'h10000) begin
-				v1 <= rs1_input;
-				v2 <= imm;
-			end else begin
-				v1 <= rs1_input;
-				v2 <= rs2_input;
-			end
+		7'b0110011, 7'b0010011 : begin
+			case (out_signal)
+				37'h0: begin
+					instructions <= 10'd1;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h2: begin
+					instructions <= 10'd2;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h4: begin
+					instructions <= 10'd4;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h8: begin
+					instructions <= 10'd8;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				37'h10: begin
+					instructions <= 10'd16;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				37'h20: begin
+					instructions <= 10'd32;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h40: begin
+					instructions <= 10'd64;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h80: begin
+					instructions <= 10'd128;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h100: begin
+					instructions <= 10'd256;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h200: begin
+					instructions <= 10'd512;
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+
+				37'h400: begin
+					instructions <= 10'd1;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				37'h800: begin
+					instructions <= 10'd4;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				37'h1000: begin
+					instructions <= 10'd8;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				37'h2000: begin
+					instructions <= 10'd16;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				37'h4000: begin
+					instructions <= 10'd32;
+					v1 <= rs1_input;
+					v2 <= imm;
+				end
+
+				37'h8000: begin
+					instructions <= 10'd64;
+					v1 <= rs1_input;
+					v2 <= imm;
+				end
+
+				37'h10000: begin
+					instructions <= 10'd128;
+					v1 <= rs1_input;
+					v2 <= imm;
+				end
+
+				37'h20000: begin
+					instructions <= 10'd256;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				37'h40000: begin
+					instructions <= 10'd512;
+					v1 <= rs1_input;
+					v2 <= Simm;
+				end
+
+				default: begin
+					v1 <= rs1_input;
+					v2 <= rs2_input;
+				end
+			endcase
+
 			final_output <= ALUoutput;
 			if (j_signal == 1) j_signal <= 0;
 			if (wr_en == 1) wr_en <= 0;
 		end 
-
         7'b0000011 : begin                                                                          // mem read set
 			addr <= v1 + imm;																						//sending required address
 			mem_count <= addr % 4;
@@ -110,27 +201,27 @@ always@(*) begin
 						2'b11:final_output <= { {24{mem_read[31]}},  mem_read[31:24]};
 					endcase
 				end
-            37'h100000 :begin
-					case (mem_count)
-						2'b00: final_output <= { {16{mem_read[15]}}, mem_read[15:0]};                 										//lh
-						2'b10: final_output <= { {16{mem_read[31]}}, mem_read[31:16]};
-					endcase
-				end
-				37'h200000 : final_output <= mem_read[31:0];                                        //lw
-            37'h400000 :begin
-					case (mem_count)
-						2'b00: final_output <= mem_read[7:0];                                         //lbu
-						2'b01: final_output <= mem_read[15:8];
-						2'b10: final_output <= mem_read[23:16];
-						2'b11: final_output <= mem_read[31:24];
-					endcase
-				end
-				37'h800000 :begin
-					case(mem_count)
-						2'b00: final_output <= mem_read[15:0];                                        //lhu
-						2'b10: final_output <= mem_read[31:16];
-					endcase
-				end
+				37'h100000 :begin
+						case (mem_count)
+							2'b00: final_output <= { {16{mem_read[15]}}, mem_read[15:0]};                 										//lh
+							2'b10: final_output <= { {16{mem_read[31]}}, mem_read[31:16]};
+						endcase
+					end
+					37'h200000 : final_output <= mem_read[31:0];                                        //lw
+				37'h400000 :begin
+						case (mem_count)
+							2'b00: final_output <= mem_read[7:0];                                         //lbu
+							2'b01: final_output <= mem_read[15:8];
+							2'b10: final_output <= mem_read[23:16];
+							2'b11: final_output <= mem_read[31:24];
+						endcase
+					end
+					37'h800000 :begin
+						case(mem_count)
+							2'b00: final_output <= mem_read[15:0];                                        //lhu
+							2'b10: final_output <= mem_read[31:16];
+						endcase
+					end
 			endcase                                                            
 			if(j_signal==1)j_signal<=0;			                                           //enable read signal
 			if(wr_en==1) wr_en<=0;

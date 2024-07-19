@@ -13,7 +13,7 @@ reg [36:0] out_signal;
 reg [6:0] opcode;
 reg [31:0] pc_input;
 reg [31:0] ALUoutput;
-wire [36:0] instructions;                   
+wire [9:0] instructions;                   
 wire  [31:0] mem_write;
 wire wr_en;
 wire [31:0] addr;
@@ -46,8 +46,7 @@ pc_input=32'd10;
 
 opcode=7'b0010011;
 ALUoutput = 32'd11;
-out_signal=47'h4000;
-
+out_signal=37'h4000;
 #100;
 
 opcode=7'b0110111;

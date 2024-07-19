@@ -42,8 +42,7 @@ wire	[4:0] SYNTHESIZED_WIRE_20;
 wire 	[31:0] SYNTHESIZED_WIRE_4;
 wire 	[31:0] SYNTHESIZED_WIRE_5;
 
-
-
+assign PC = SYNTHESIZED_WIRE_22;
 
 
 PC	b2v_inst(
