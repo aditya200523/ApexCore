@@ -10,7 +10,7 @@ module decoder(
    output rs2_valid,
 
    output [6:0] opcode,
-  output [36:0] out_signal
+  output [44:0] out_signal
    
     );
 
@@ -26,6 +26,7 @@ wire [6:0]func7;
     assign is_j_instr=(instr[6:0]==7'b1101111);
     assign is_s_instr=(instr[6:0]==7'b0100011);
     assign is_r_instr=(instr[6:0]==7'b0110011)||(instr[6:0]==7'b0100111)||(instr[6:0]==7'b1010011);
+    assign is_m_instr=(instr[6:0]==7'b0110011 && func7==7'b0000001);
     assign rs2= (is_r_instr || is_s_instr || is_b_instr) ? instr[24:20] :  0;
     assign rs1= (is_r_instr || is_s_instr || is_b_instr || is_i_instr) ? instr[19:15]: 0;
     assign rd= (is_r_instr || is_u_instr || is_j_instr || is_i_instr) ? instr[11:7] : 0;
@@ -46,7 +47,7 @@ wire [6:0]func7;
                 is_j_instr ? {  {13{instr[31]}},  instr[19:12], instr[20], instr[30:25], instr[24:21], 1'b0  } : 
                 32'b0;
                 
-   
+   // Integer Extensions Instructions
   assign out_signal[0]=(is_r_instr&&(func3==3'h0)&&(func7==7'h00))? 1'b1 : 1'b0; //add
   assign out_signal[1]=(is_r_instr&&(func3==3'h0)&&(func7==7'h20))? 1'b1 : 1'b0; //sub
   assign out_signal[2]=(is_r_instr&&(func3==3'h4)&&(func7==7'h00))? 1'b1 : 1'b0; //xor
@@ -91,5 +92,16 @@ wire [6:0]func7;
   assign out_signal[35]=(opcode==7'b0110111)? 1'b1 : 1'b0; //lui
   assign out_signal[36]=(opcode==7'b0010111)? 1'b1 : 1'b0; //auipc
 
+
+  //M extension Instructions
+
+  assign out_signal[37]=((is_m_instr)&&(func3==3'h0)) ? 1'b1 : 1'b0; //mul
+  assign out_signal[38]=((is_m_instr)&&(func3==3'h1)) ? 1'b1 : 1'b0; //mulh
+  assign out_signal[39]=((is_m_instr)&&(func3==3'h2)) ? 1'b1 : 1'b0; //mulsu
+  assign out_signal[40]=((is_m_instr)&&(func3==3'h3)) ? 1'b1 : 1'b0; //mulu
+  assign out_signal[41]=((is_m_instr)&&(func3==3'h4)) ? 1'b1 : 1'b0; //div
+  assign out_signal[42]=((is_m_instr)&&(func3==3'h5)) ? 1'b1 : 1'b0; //divu
+  assign out_signal[43]=((is_m_instr)&&(func3==3'h6)) ? 1'b1 : 1'b0; //rem
+  assign out_signal[44]=((is_m_instr)&&(func3==3'h7)) ? 1'b1 : 1'b0; //remu
 
 endmodule
