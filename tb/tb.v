@@ -2,25 +2,27 @@
 
 module tb;
 
-reg clk, reset, Ext_MemWrite;
-reg [31:0] Ext_WriteData, Ext_DataAdr;
+reg clk, reset;//, Ext_MemWrite;
+//reg [31:0] Ext_WriteData, Ext_DataAdr;
 
 wire [31:0] WriteData, DataAdr, ReadData;
 wire MemWrite;
+wire [7:0] led;
 
-reg [4:0] SP = 0, EP = 0;
+//reg [4:0] SP = 0, EP = 0;
 
 integer error_count = 0, i = 0;
-integer fw = 0, fd = 0, num_values = 16;
-reg [4:0] register_array [0:15];
-integer value = 0;
-wire [31:0] ProgramCounter;
+//integer fw = 0, fd = 0, num_values = 16;
+//reg [4:0] register_array [0:15];
+//integer value = 0;
+//wire [31:0] ProgramCounter;
 
-top uut (clk, reset, Ext_MemWrite, Ext_WriteData, Ext_DataAdr, MemWrite, WriteData, DataAdr, ReadData, ProgramCounter);
+top uut (clk, reset, led //, //Ext_MemWrite, Ext_WriteData, Ext_DataAdr,MemWrite, WriteData, DataAdr, ReadData, ProgramCounter
+);
 
 initial begin
     $dumpfile("tb.vcd");
-    $dumpvars(0, tb, uut.rvsingle.b2v_inst4.register_file[2], uut.rvsingle.b2v_inst4.register_file[3]);
+    $dumpvars(0, tb, uut.rvsingle.registerfile_0.register_file[2], uut.rvsingle.registerfile_0.register_file[3]);
     //dump all registers in data_ram of dmem module to vcd file
     for (i = 0; i < 64; i = i + 1) begin
         $dumpvars(0, tb, uut.dmem.data_ram[i]);

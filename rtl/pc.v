@@ -3,8 +3,7 @@ module PC(
    input reset,
    input j_signal,
    input [31:0] jump,
-	
-	output[31:0] out
+   output[31:0] out_sign
 );
    reg [31:0] next_pc = 32'd0;
    
@@ -19,5 +18,5 @@ module PC(
 		end
    end
 	
-	assign out = next_pc;
+	assign out_sign = next_pc;
 endmodule 

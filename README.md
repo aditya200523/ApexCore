@@ -55,7 +55,7 @@ Following is the block diagram and workflow in simple terms of our CPU:-
 ### Tech Stack
 
 - Verilog
-- Quartus Prime IDE
+- Vivado
 - Modelsim Altera
 - Lattice Framework 
 ---
@@ -66,15 +66,12 @@ Following is the block diagram and workflow in simple terms of our CPU:-
 ---
 ## Contributors
 
-- [Aditya Mahajan](https://github.com/aditya200523)
-- [Shri Vishakh Devanand](https://github.com/LOuLOu-THEKing)
-- [Shaurya Rane]
-
---- 
-## Mentors 
-
 - [Saish Karole](https://github.com/NachtSpyder04)
 - [Atharva Kashalkar](https://github.com/RapidRoger18)
+- [Aditya Mahajan](https://github.com/aditya200523)
+- [Shri Vishakh Devanand](https://github.com/LOuLOu-THEKing)
+- [Shaurya Rane](https://github.com/shauryarane05)
+
 
 ---
 ### Acknowledgements and Resources

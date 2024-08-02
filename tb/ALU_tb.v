@@ -22,18 +22,42 @@ module ALU_tb;
     reg clk;
     reg [31:0] rs1;
     reg [31:0] rs2;
-    reg [9:0] instructions; //subjected to change
-    wire [31:0] ALUoutput; 
+    reg [12:0] instructions; //subjected to change
+    wire [63:0] ALUoutput; 
 
-    alu ALU1( .v1(rs1), .v2(rs2), .instructions(instructions), .ALUoutput(ALUoutput));
+    alu ALU1( .in1(rs1), .in2(rs2), .instructions(instructions), .ALUoutput(ALUoutput));
     
-    initial rs1 = 5'd5;
-    initial rs2 = 5'd4;
-    initial instructions = 10'b1;
+    initial rs1 = 32'd5;
+    initial rs2 = 32'd4;
+    initial instructions = 13'd0;
     always #10 clk = ~clk;
     initial begin
         #50 
-        instructions <= 10'h1;
+        instructions <= 13'd1;
+        #50
+        instructions <= 13'd2;
+        #50
+        instructions <= 13'd4;
+        #50
+        instructions <= 13'd8;
+        #50
+        instructions <= 13'd16;
+        #50
+        instructions <= 13'd32;
+        #50
+        instructions <= 13'd64;
+        #50
+        instructions <= 13'd128;
+        #50
+        instructions <= 13'd256;
+        #50
+        instructions <= 13'd512;
+        #50
+        instructions <= 13'd1024;
+        #50
+        instructions <= 13'd2048;
+        #50
+        instructions <= 13'd4096;
     end
     
 endmodule
