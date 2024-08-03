@@ -28,15 +28,17 @@ wire [4:0]func5;
     assign is_s_instr=(instr[6:0]==7'b0100011);
     assign is_r_instr=(instr[6:0]==7'b0110011)||(instr[6:0]==7'b0100111)||(instr[6:0]==7'b1010011);
     assign is_m_instr=(instr[6:0]==7'b0110011 && func7==7'b0000001);
-    assign rs2= (is_r_instr || is_s_instr || is_b_instr) ? instr[24:20] :  0;
-    assign rs1= (is_r_instr || is_s_instr || is_b_instr || is_i_instr) ? instr[19:15]: 0;
-    assign rd= (is_r_instr || is_u_instr || is_j_instr || is_i_instr) ? instr[11:7] : 0;
+    assign is_a_instr=(instr[6:0]==7'b0101111);
+    assign rs2= (is_r_instr || is_s_instr || is_b_instr || is_a_instr) ? instr[24:20] :  0;
+    assign rs1= (is_r_instr || is_s_instr || is_b_instr || is_i_instr || is_a_instr) ? instr[19:15]: 0;
+    assign rd= (is_r_instr || is_u_instr || is_j_instr || is_i_instr || is_a_instr) ? instr[11:7] : 0;
     assign func3= (is_r_instr || is_s_instr || is_b_instr || is_i_instr) ? instr[14:12] : 0;
     assign func7= is_r_instr ? instr[31:25] : 0;
+    assign func5 = is_a_instr ? instr[31:27] : 0;
 
    
-   assign rs1_valid=is_r_instr || is_i_instr || is_s_instr || is_b_instr;
-   assign rs2_valid= is_r_instr || is_s_instr || is_b_instr; 
+   assign rs1_valid=is_r_instr || is_i_instr || is_s_instr || is_b_instr || is_a_instr;
+   assign rs2_valid= is_r_instr || is_s_instr || is_b_instr || is_a_instr;
   
   
    
