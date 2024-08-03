@@ -40,7 +40,7 @@ wire [6:0]func7;
   
    
    
-   assign imm = is_i_instr ? {  {21{instr[31]}},  instr[30:20]  } :
+   assign imm = is_i_instr ? {  {21{instr[31]}},  instr[30:20] } :
                 is_s_instr ? {  {21{instr[31]}},  instr[30:25],  instr[11:7]  } :
                 is_b_instr ? {  {19{1'b0}}, instr[31],  instr[7], instr[30:25], instr[11:8], 1'b0 } :
                 is_u_instr ? {  instr[31:12]  } :

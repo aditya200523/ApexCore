@@ -17,7 +17,7 @@ integer error_count = 0, i = 0;
 //integer value = 0;
 //wire [31:0] ProgramCounter;
 
-top uut (clk, reset, led //, //Ext_MemWrite, Ext_WriteData, Ext_DataAdr,MemWrite, WriteData, DataAdr, ReadData, ProgramCounter
+top uut (clk, reset, led[0], led[1], led[2], led[3], led[4], led[5], led[6], led[7] //, //Ext_MemWrite, Ext_WriteData, Ext_DataAdr,MemWrite, WriteData, DataAdr, ReadData, ProgramCounter
 );
 
 initial begin

@@ -263,7 +263,7 @@ always@(*) begin
 			if (wr_en_rf == 0) wr_en_rf <= 1;
 		end 
         7'b0000011 : begin                                                                          //! mem read set
-			addr <= rs1_input[imm[11:0] +: 0];																						//!sending required address
+			addr <= rs1_input[imm[11:0] +: 32];																						//!sending required address
 			mem_count <= addr % 4;
 			wr_en_rf <= 0;
 			wr_en <= 0;
