@@ -419,6 +419,97 @@ always@(*) begin
             end   
 				if(wr_en==1) wr_en<=0;				
 	  	end 
+	7'b0101111 : begin
+		case(out_signal)
+			54'h2000000000 : begin  //AMOSWAP.W
+			v1 <= mem_read;
+			v2 <= rs2_input;
+			final_output <= mem_read;
+			mem_write <= rs2_input;
+			addr <= rs1_input;
+			wr_en <= 1;
+			wr_en_rf <= 1; 
+			end 
+			54'h4000000000 : begin   //AMOADD.W
+				v1 <= mem_read;
+				v2 <= rs2_input;
+
+				final_output <= mem_read;
+				mem_write <= ALUoutput;
+				addr <= rs1_input;
+				wr_en <= 1;
+				wr_en_rf <= 1;
+			end 
+			54'h8000000000 : begin     //AMOAND.W
+				v1 <= mem_read;
+				v2 <= rs2_input;
+
+				final_output <= mem_read;
+				mem_write <= ALUoutput;
+				addr <= rs1_input;
+				wr_en <= 1;
+				wr_en_rf <= 1;
+			end 
+			54'h10000000000 : begin     //AMOOR.W
+				v1 <= mem_read;
+				v2 <= rs2_input;
+
+				final_output <= mem_read;
+				mem_write <= ALUoutput;
+				addr <= rs1_input;
+				wr_en <= 1;
+				wr_en_rf <= 1;
+			end 
+			54'h20000000000 : begin     //AMOXOR.W
+				v1 <= mem_read;
+				v2 <= rs2_input;
+
+				final_output <= mem_read;
+				mem_write <= ALUoutput;
+				addr <= rs1_input;
+				wr_en <= 1;
+				wr_en_rf <= 1;
+			end 
+			54'h40000000000 : begin     //AMOMAX.W
+				v1 <= mem_read;
+				v2 <= rs2_input;
+
+				final_output <= mem_read;
+				mem_write <= ALUoutput;
+				addr <= rs1_input;
+				wr_en <= 1;
+				wr_en_rf <= 1;
+			end 
+			54'h80000000000 : begin     //AMOMIN.W
+				v1 <= mem_read;
+				v2 <= rs2_input;
+
+				final_output <= mem_read;
+				mem_write <= ALUoutput;
+				addr <= rs1_input;
+				wr_en <= 1;
+				wr_en_rf <= 1;
+			end 
+		endcase 
+				
+				
+			
+				
+			
+				
+				
+				
+			
+				
+				
+				
+
+			
+		
+			
+		      
+				
+				
 
     endcase
 end
