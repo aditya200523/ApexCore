@@ -426,7 +426,7 @@ always@(*) begin
 			v1 <= mem_read;
 			v2 <= rs2_input;
 			final_output <= mem_read;
-			mem_write <= rs2_input;
+			mem_write <= ALUoutput;
 			addr <= rs1_input;
 			wr_en <= 1;
 			wr_en_rf <= 1; 
