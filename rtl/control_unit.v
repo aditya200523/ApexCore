@@ -5,12 +5,12 @@ module control_unit(
 	input [31:0] rs1_input,                                                                                     //!rs2 value from Rfile
 	input [31:0] imm,                                                                                           //!immediate value from Rfile
 	input [31:0] mem_read,                                                                                      //!read data from memory
-	input [44:0] out_signal,                                                                                    //!instruction bus from decoder
+	input [53:0] out_signal,                                                                                    //!instruction bus from decoder
 	input [6:0] opcode,                                                                                         //!opcode for instructions from Rfile
 	input [31:0] pc_input,                                                                                      //!input from PC(its output address) 
 	input [63:0] ALUoutput,                                                                                     //!output from ALU
 
-	output reg [12:0] instructions,																				//!instruction bus for ALU																									
+	output reg [15:0] instructions,																				//!instruction bus for ALU																									
 	output reg [31:0] v1,																						//!value going into ALU																													
 	output reg [31:0] v2,					    	                                 						    //!value going into ALU                         
 	output reg [31:0] mem_write,                                                                                //!write data in memory
@@ -43,133 +43,133 @@ always@(*) begin
 		7'b0110011, 7'b0010011 : begin
 			case (out_signal)
 				45'h1: begin
-					instructions <= 13'd1;
+					instructions <= 16'd1;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h2: begin
-					instructions <= 13'd2;
+					instructions <= 16'd2;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h4: begin
-					instructions <= 13'd4;
+					instructions <= 16'd4;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h8: begin
-					instructions <= 13'd8;
+					instructions <= 16'd8;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h10: begin
-					instructions <= 13'd16;
+					instructions <= 16'd16;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h20: begin
-					instructions <= 13'd32;
+					instructions <= 16'd32;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h40: begin
-					instructions <= 13'd64;
+					instructions <= 16'd64;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h80: begin
-					instructions <= 13'd128;
+					instructions <= 16'd128;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h100: begin
-					instructions <= 13'd256;
+					instructions <= 16'd256;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h200: begin
-					instructions <= 13'd512;
+					instructions <= 16'd512;
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput;
 				end
 
 				45'h400: begin
-					instructions <= 13'd1;
+					instructions <= 16'd1;
 					v1 <= rs1_input;
 					v2 <= imm;
 					final_output <= ALUoutput;
 				end
 
 				45'h800: begin
-					instructions <= 13'd4;
+					instructions <= 16'd4;
 					v1 <= rs1_input;
 					v2 <= Simm;
 					final_output <= ALUoutput;
 				end
 
 				45'h1000: begin
-					instructions <= 13'd8;
+					instructions <= 16'd8;
 					v1 <= rs1_input;
 					v2 <= Simm;
 					final_output <= ALUoutput;
 				end
 
 				45'h2000: begin
-					instructions <= 13'd16;
+					instructions <= 16'd16;
 					v1 <= rs1_input;
 					v2 <= Simm;
 					final_output <= ALUoutput;
 				end
 
 				45'h4000: begin
-					instructions <= 13'd32;
+					instructions <= 16'd32;
 					v1 <= rs1_input;
 					v2 <= imm;
 					final_output <= ALUoutput;
 				end
 
 				45'h8000: begin
-					instructions <= 13'd64;
+					instructions <= 16'd64;
 					v1 <= rs1_input;
 					v2 <= imm;
 					final_output <= ALUoutput;
 				end
 
 				45'h10000: begin
-					instructions <= 13'd128;
+					instructions <= 16'd128;
 					v1 <= rs1_input;
 					v2 <= imm;
 					final_output <= ALUoutput;
 				end
 
 				45'h20000: begin
-					instructions <= 13'd256;
+					instructions <= 16'd256;
 					v1 <= rs1_input;
 					v2 <= Simm;
 					final_output <= ALUoutput;
 				end
 
 				45'h40000: begin
-					instructions <= 13'd512;
+					instructions <= 16'd512;
 					v1 <= rs1_input;
 					v2 <= Simm;
 					final_output <= ALUoutput;
@@ -178,13 +178,13 @@ always@(*) begin
 			//!M extension instructions
 				//!multiplication instructions
 				45'h2000000000 : begin
-					instructions <= 13'd1024; //!mul
+					instructions <= 16'd1024; //!mul
 						v1 <= rs1_input;
 						v2 <= rs2_input;
 					final_output <= ALUoutput[31:0];
 				end
 				45'h4000000000 : begin
-					instructions <= 13'd1024; //! mulh
+					instructions <= 16'd1024; //! mulh
 					if (rs1_input[31] == 1 && rs2_input[31] == 1) final_output[31] <= 1'b0;
 					if (rs1_input[31] == 1 || rs2_input[31] == 1) final_output[31] <= 1'b1;
 					if (rs1_input[31] == 1) begin
@@ -200,21 +200,21 @@ always@(*) begin
 					final_output[30:0] <= ALUoutput[62:32];
 				end
 				45'h8000000000 : begin
-					instructions <= 13'd1024; //!mulhsu
+					instructions <= 16'd1024; //!mulhsu
 					final_output[31] <= rs1_input[31];
 					v1 <= ~rs1_input + 1;
 					v2 <= rs2_input;
 					final_output[30:0] <= ALUoutput[62:32];
 				end
 				45'h10000000000 : begin
-					instructions <= 13'd1024; //!mulhu
+					instructions <= 16'd1024; //!mulhu
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput[63:32];
 				end
 				//!division instructions
 				45'h20000000000 : begin
-					instructions <= 13'd2048; //!div
+					instructions <= 16'd2048; //!div
 					if (rs1_input[31] == 1 && rs2_input[31] == 1) final_output[31] <= 1'b0;
 					if (rs1_input[31] == 1 || rs2_input[31] == 1) final_output[31] <= 1'b1;					
 					if (rs1_input[31] == 1) begin
@@ -230,14 +230,14 @@ always@(*) begin
 					final_output[30:0] <= ALUoutput[30:0];
 				end
 				45'h40000000000 : begin
-					instructions <= 13'd2048; //!divu
+					instructions <= 16'd2048; //!divu
 					v1 <= rs1_input;
 					v2 <= rs2_input;
 					final_output <= ALUoutput[31:0];
 				end
 				//!remainder instructions
 				45'h80000000000 : begin
-					instructions <= 13'd4096; //!rem
+					instructions <= 16'd4096; //!rem
 					if (rs1_input[31] == 1 && rs2_input[31] == 1) final_output[31] <= 1'b0;
 					if (rs1_input[31] == 1 || rs2_input[31] == 1) final_output[31] <= 1'b1;
 					if (rs1_input[31] == 1) begin
@@ -253,7 +253,7 @@ always@(*) begin
 					final_output[30:0] <= ALUoutput[30:0];
 				end
 				45'h100000000000 : begin
-					instructions <= 13'd4096; //!remu
+					instructions <= 16'd4096; //!remu
 					v1 <= rs1_input;
 					v2 <=rs2_input;
 					final_output <= ALUoutput[31:0];
@@ -422,6 +422,7 @@ always@(*) begin
 	7'b0101111 : begin
 		case(out_signal)
 			54'h2000000000 : begin  //AMOSWAP.W
+			instructions <= 16'd8192;
 			v1 <= mem_read;
 			v2 <= rs2_input;
 			final_output <= mem_read;
@@ -431,6 +432,7 @@ always@(*) begin
 			wr_en_rf <= 1; 
 			end 
 			54'h4000000000 : begin   //AMOADD.W
+				instructions <= 16'd1
 				v1 <= mem_read;
 				v2 <= rs2_input;
 
@@ -441,6 +443,7 @@ always@(*) begin
 				wr_en_rf <= 1;
 			end 
 			54'h8000000000 : begin     //AMOAND.W
+				instructions <= 16'd16;
 				v1 <= mem_read;
 				v2 <= rs2_input;
 
@@ -451,6 +454,7 @@ always@(*) begin
 				wr_en_rf <= 1;
 			end 
 			54'h10000000000 : begin     //AMOOR.W
+				instructions <= 16'd8;
 				v1 <= mem_read;
 				v2 <= rs2_input;
 
@@ -461,6 +465,7 @@ always@(*) begin
 				wr_en_rf <= 1;
 			end 
 			54'h20000000000 : begin     //AMOXOR.W
+				instructions <= 16'd4;
 				v1 <= mem_read;
 				v2 <= rs2_input;
 
@@ -471,6 +476,7 @@ always@(*) begin
 				wr_en_rf <= 1;
 			end 
 			54'h40000000000 : begin     //AMOMAX.W
+				instructions <= 16'd16384;
 				v1 <= mem_read;
 				v2 <= rs2_input;
 
@@ -481,6 +487,7 @@ always@(*) begin
 				wr_en_rf <= 1;
 			end 
 			54'h80000000000 : begin     //AMOMIN.W
+				instructions <= 16'd32768;
 				v1 <= mem_read;
 				v2 <= rs2_input;
 
@@ -490,7 +497,11 @@ always@(*) begin
 				wr_en <= 1;
 				wr_en_rf <= 1;
 			end 
-		endcase 
+		endcase
+	end
+	endcase 
+end 
+endmodule
 				
 				
 			
@@ -511,6 +522,4 @@ always@(*) begin
 				
 				
 
-    endcase
-end
-endmodule 
+   
