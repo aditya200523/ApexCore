@@ -15,7 +15,7 @@ wire [31:0] source_val1;
 wire [31:0] source_val2;
 wire [63:0] ALUoutput;
 wire [6:0] opcode;
-wire [44:0] out_signal;
+wire [53:0] out_signal;
 wire rs1_valid;
 wire rs2_valid;
 wire registerfile_write;
