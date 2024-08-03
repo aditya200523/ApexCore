@@ -21,9 +21,9 @@ module control_unit(
 	output reg [31:0] final_output,                                                                             //!goes into Rfile as rd
 	output reg wr_en_rf
 	);
- reg [1:0] mem_count = 0;
- wire [31:0] Simm = 0;
- reg [63:0] val = 0;
+reg [1:0] mem_count = 0;
+wire [31:0] Simm = 0;
+reg [63:0] val = 0;
 initial begin 
 	wr_en_rf <= 0;
 	wr_en <= 0;
@@ -226,9 +226,9 @@ always@(*) begin
 						v2 <= ~rs2_input + 1;
 					end else begin
 						v2 <= rs2_input;
-					end
 					final_output[30:0] <= ALUoutput[30:0];
-				end
+					end 
+				    end
 				54'h40000000000 : begin
 					instructions <= 16'd2048; //!divu
 					v1 <= rs1_input;
@@ -414,24 +414,24 @@ always@(*) begin
         end
         7'b0010111 : begin
 			if(j_signal==1)j_signal<=0;
-		if(out_signal == 54'h1000000000) begin   
+		if(out_signal == 54'200000000000) begin   
 				final_output <= pc_input +{imm[31:12],12'b0};                                             //!auipc 
             end   
 				if(wr_en==1) wr_en<=0;				
 	  	end 
 	7'b0101111 : begin
 		case(out_signal)
-			54'h2000000000 : begin  //AMOSWAP.W
-			instructions <= 16'd8192;
-			v1 <= mem_read;
-			v2 <= rs2_input;
-			final_output <= mem_read;
-			mem_write <= ALUoutput;
-			addr <= rs1_input;
-			wr_en <= 1;
-			wr_en_rf <= 1; 
+			54'h400000000000 : begin      //AMOSWAP
+				instructions <= 16'd8192;
+			    v1 <= mem_read;
+			    v2 <= rs2_input;
+			    final_output <= mem_read;
+			    mem_write <= ALUoutput;
+			    addr <= rs1_input;
+			    wr_en <= 1;
+			    wr_en_rf <= 1;
 			end 
-			54'h4000000000 : begin   //AMOADD.W
+			54'h800000000000 : begin   //AMOADD.W
 				instructions <= 16'd1
 				v1 <= mem_read;
 				v2 <= rs2_input;
@@ -442,7 +442,7 @@ always@(*) begin
 				wr_en <= 1;
 				wr_en_rf <= 1;
 			end 
-			54'h8000000000 : begin     //AMOAND.W
+			54'h1000000000000: begin     //AMOAND.W
 				instructions <= 16'd16;
 				v1 <= mem_read;
 				v2 <= rs2_input;
@@ -453,7 +453,7 @@ always@(*) begin
 				wr_en <= 1;
 				wr_en_rf <= 1;
 			end 
-			54'h10000000000 : begin     //AMOOR.W
+			54'h2000000000000 : begin     //AMOOR.W
 				instructions <= 16'd8;
 				v1 <= mem_read;
 				v2 <= rs2_input;
@@ -464,7 +464,7 @@ always@(*) begin
 				wr_en <= 1;
 				wr_en_rf <= 1;
 			end 
-			54'h20000000000 : begin     //AMOXOR.W
+		    54'h4000000000000 : begin     //AMOXOR.W
 				instructions <= 16'd4;
 				v1 <= mem_read;
 				v2 <= rs2_input;
@@ -475,7 +475,7 @@ always@(*) begin
 				wr_en <= 1;
 				wr_en_rf <= 1;
 			end 
-			54'h40000000000 : begin     //AMOMAX.W
+			54'h8000000000000  : begin     //AMOMAX.W
 				instructions <= 16'd16384;
 				v1 <= mem_read;
 				v2 <= rs2_input;
@@ -486,7 +486,7 @@ always@(*) begin
 				wr_en <= 1;
 				wr_en_rf <= 1;
 			end 
-			54'h80000000000 : begin     //AMOMIN.W
+			54'h10000000000000 : begin     //AMOMIN.W
 				instructions <= 16'd32768;
 				v1 <= mem_read;
 				v2 <= rs2_input;
