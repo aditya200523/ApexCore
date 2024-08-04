@@ -22,7 +22,7 @@ module control_unit(
 	output reg wr_en_rf
 	);
  reg [1:0] mem_count = 0;
- wire [31:0] Simm = 0;
+ reg [31:0] Simm = 0;
  reg [63:0] val = 0;
 initial begin 
 	wr_en_rf <= 0;
@@ -37,8 +37,22 @@ initial begin
 	v2 <= 0;
 	val <= 0;
 end	 
-assign Simm ={{20{imm[31]}},imm[31:12]};
 always@(*) begin
+	case (opcode)
+		7'b0010011, // I-Type (e.g., ADDI)
+		7'b0000011, // Load Instructions (e.g., LW)
+		7'b1100111: // JALR
+			Simm <= {{20{imm[31]}}, imm[31:20]};
+
+		7'b0100011: // S-Type (e.g., SW)
+			Simm <= {{20{imm[31]}}, imm[31:25], imm[11:7]};
+
+		7'b1100011: // B-Type (e.g., BEQ)
+			Simm <= {{19{imm[31]}}, imm[31], imm[7], imm[30:25], imm[11:8], 1'b0};
+
+		default:
+			Simm <= 32'b0; // Default case
+	endcase
 	case(opcode)
 		7'b0110011, 7'b0010011 : begin
 			case (out_signal)
