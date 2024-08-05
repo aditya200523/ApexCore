@@ -1,3 +1,18 @@
+/**
+ * @file decoder.v
+ * This module works as a decoder of the instruction from the instruction memory.
+ * 
+ * @input instr       32-bit RISC-V Instruction.
+ * 
+ * @return rs1        source register 1 index.
+ * @return rs2        source register 2 index.
+ * @return imm        Immediate value extracted from instruction.
+ * @return rd         Destination register index.
+ * @return rs1_valid  Indicates if rs1 is valid.
+ * @return rs2_valid  Indicates if rs2 is valid.
+ * @return opcode     Operation code from the instruction.
+ * @return out_signal Control signals for various instructions.
+*/
 module decoder(
    
    input [31:0] instr,

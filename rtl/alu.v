@@ -1,3 +1,15 @@
+/**
+ * @file alu.v
+ *
+ * This module implements the simple arithmetics with the values given from control unit.
+ * 
+ * @input in1           Inputs the first sourced value (unsigned only).
+ * @input in2           Inputs the second sourced value (unsigned only).
+ * @input instructions  Inputs the selection line for which process to work.
+ *
+ * @return ALUoutput    Outputs the value calculated.
+*/
+
 
 module alu(
 input [31:0] in1,

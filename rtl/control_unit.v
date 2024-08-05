@@ -1,3 +1,33 @@
+/**
+ * @file control_unit.v
+ * 
+ * This module implements the control unit of a RISC-V processor, handling control signal generation, and data path control. 
+ * The control unit receives input signals such as the opcode, immediate values,
+ * register data, and outputs signals to the ALU, memory, and other components.
+ * 
+ * @param clk          Inputs clock signal.
+ * @param rst          Inputs reset signal.
+ * @param rs1_input    Inputs value from the first source register.
+ * @param rs2_input    Inputs value from the second source register.
+ * @param imm          Immediate value for instructions requiring it.
+ * @param mem_read     Data read from memory.
+ * @param out_signal   Instruction bus from the decoder.
+ * @param opcode       Opcode for instructions from the register file.
+ * @param pc_input     Program counter input address.
+ * @param ALUoutput    Output from the ALU.
+ * 
+ * @return instructions Instruction bus for the ALU.
+ * @return v1           Value going into the ALU from the first source.
+ * @return v2           Value going into the ALU from the second source.
+ * @return mem_write    Data to be written to memory.
+ * @return wr_en        Write enable signal for memory.
+ * @return addr         Address for memory operations.
+ * @return j_signal     Jump signal for control flow instructions.
+ * @return jump         Jump target address.
+ * @return final_output Data to be written to the destination register in the register file.
+ * @return wr_en_rf     Write enable signal for the register file.
+ */
+
 module control_unit(
 	input clk,                                                                                                  //!input clock
 	input rst,                                                                                                  //!reset pin
@@ -40,18 +70,8 @@ end
 always@(*) begin
 	case (opcode)
 		7'b0010011, // I-Type (e.g., ADDI)
-		7'b0000011, // Load Instructions (e.g., LW)
-		7'b1100111: // JALR
+		7'b0000011:
 			Simm <= {{20{imm[31]}}, imm[31:20]};
-
-		7'b0100011: // S-Type (e.g., SW)
-			Simm <= {{20{imm[31]}}, imm[31:25], imm[11:7]};
-
-		7'b1100011: // B-Type (e.g., BEQ)
-			Simm <= {{19{imm[31]}}, imm[31], imm[7], imm[30:25], imm[11:8], 1'b0};
-
-		default:
-			Simm <= 32'b0; // Default case
 	endcase
 	case(opcode)
 		7'b0110011, 7'b0010011 : begin

@@ -1,4 +1,22 @@
-
+/**
+ * @module registerfile
+ * @brief Register file module for a CPU.
+ * 
+ * This module implements a register file with 32 registers, allowing read and write operations
+ * based on clock cycles, read address signals, and write enable signals.
+ * 
+ * @input clk       Clock input signal.
+ * @input rs1       Register source 1 address (5-bit).
+ * @input rs2       Register source 2 address (5-bit).
+ * @input rs1_valid Indicates if the rs1 register address is valid.
+ * @input rs2_valid Indicates if the rs2 register address is valid.
+ * @input rd        Register destination address (5-bit).
+ * @input wr_en     Write enable signal.
+ * @input rd_value  Value to be written into the register.
+ * 
+ * @return rs1_value Value read from the rs1 register.
+ * @return rs2_value Value read from the rs2 register.
+ */
 module registerfile(
 	input clk,
 	input [4:0]rs1,

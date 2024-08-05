@@ -1,4 +1,22 @@
-
+/**
+ * @module seven_seg
+ * @brief Seven-segment display driver.
+ * 
+ * This module drives a 7-segment display based on BCD (Binary-Coded Decimal) input.
+ * 
+ * @input clk      Clock input signal.
+ * @input bcd      32-bit BCD input value (used to drive the displays).
+ * @input opcode   7-bit opcode input (for display control).
+ *
+ * @return s1     7-segment display output for the first digit.
+ * @return s2     7-segment display output for the second digit.
+ * @return s3     7-segment display output for the third digit.
+ * @return s4     7-segment display output for the fourth digit.
+ * @return s5     7-segment display output for the fifth digit.
+ * @return s6     7-segment display output for the sixth digit.
+ * @return s7     7-segment display output for the seventh digit.
+ * @return s8     7-segment display output for the eighth digit.
+ */
 
 module seven_seg(
 input clk,

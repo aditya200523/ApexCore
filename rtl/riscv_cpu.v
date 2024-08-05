@@ -1,3 +1,21 @@
+/**
+ * @file riscv_cpu.v
+ * 
+ * This module implements the bare cpu modules, and interconnects various signals
+ * of modules.
+ * 
+ * @input clk         Inputs clock signal.
+ * @input reset       Inputs reset signal.
+ * @input Instr       Inputs Instruction from instruction memory.
+ * @input ReadData    Input Data read from memory.
+ *
+ * @return PC         Output program counter value.
+ * @return MemWrite   Output memory write enable signal.
+ * @return Mem_WrAddr Output memory write enable address.
+ * @return Mem_WrData Output data to be written to memory.
+*/
+
+
 module riscv_cpu (
   input clk, reset,
     output [31:0] PC,

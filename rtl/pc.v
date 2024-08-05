@@ -1,3 +1,18 @@
+/**
+ * @module PC
+ * @brief Program Counter module.
+ * 
+ * This module implements the program counter (PC) for a CPU, updating the PC value
+ * based on clock cycles, reset signal, and jump signal.
+ * 
+ * @input clk      Clock input signal.
+ * @input reset    Reset signal to initialize the program counter.
+ * @input j_signal Jump signal indicating a branch or jump instruction.
+ * @input jump     32-bit jump address to be loaded into the program counter on a jump.
+ * 
+ * @return out_sign Current value of the program counter.
+ */
+
 module PC(
    input clk,
    input reset,
