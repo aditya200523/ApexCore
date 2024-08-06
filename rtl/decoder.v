@@ -25,13 +25,14 @@ module decoder(
    output rs2_valid,
 
    output [6:0] opcode,
-  output [44:0] out_signal
+   output [53:0] out_signal
    
     );
 
-wire  is_r_instr, is_u_instr, is_s_instr, is_b_instr, is_j_instr, is_i_instr;
+wire  is_r_instr, is_u_instr, is_s_instr, is_b_instr, is_j_instr, is_i_instr, is_m_instr, is_a_instr;
 wire [2:0]func3;
 wire [6:0]func7;
+wire [4:0]func5;
 
 
     assign opcode=instr[6:0];
@@ -42,20 +43,22 @@ wire [6:0]func7;
     assign is_s_instr=(instr[6:0]==7'b0100011);
     assign is_r_instr=(instr[6:0]==7'b0110011)||(instr[6:0]==7'b0100111)||(instr[6:0]==7'b1010011);
     assign is_m_instr=(instr[6:0]==7'b0110011 && func7==7'b0000001);
-    assign rs2= (is_r_instr || is_s_instr || is_b_instr) ? instr[24:20] :  0;
-    assign rs1= (is_r_instr || is_s_instr || is_b_instr || is_i_instr) ? instr[19:15]: 0;
-    assign rd= (is_r_instr || is_u_instr || is_j_instr || is_i_instr) ? instr[11:7] : 0;
+    assign is_a_instr=(instr[6:0]==7'b0101111);
+    assign rs2= (is_r_instr || is_s_instr || is_b_instr || is_a_instr) ? instr[24:20] :  0;
+    assign rs1= (is_r_instr || is_s_instr || is_b_instr || is_i_instr || is_a_instr) ? instr[19:15]: 0;
+    assign rd= (is_r_instr || is_u_instr || is_j_instr || is_i_instr || is_a_instr) ? instr[11:7] : 0;
     assign func3= (is_r_instr || is_s_instr || is_b_instr || is_i_instr) ? instr[14:12] : 0;
     assign func7= is_r_instr ? instr[31:25] : 0;
+    assign func5 = is_a_instr ? instr[31:27] : 0;
 
    
-   assign rs1_valid=is_r_instr || is_i_instr || is_s_instr || is_b_instr;
-   assign rs2_valid= is_r_instr || is_s_instr || is_b_instr; 
+   assign rs1_valid=is_r_instr || is_i_instr || is_s_instr || is_b_instr || is_a_instr;
+   assign rs2_valid= is_r_instr || is_s_instr || is_b_instr || is_a_instr;
   
   
    
    
-   assign imm = is_i_instr ? {  {21{instr[31]}},  instr[30:20] } :
+   assign imm = is_i_instr ? {  {21{instr[31]}},  instr[30:20]  } :
                 is_s_instr ? {  {21{instr[31]}},  instr[30:25],  instr[11:7]  } :
                 is_b_instr ? {  {19{1'b0}}, instr[31],  instr[7], instr[30:25], instr[11:8], 1'b0 } :
                 is_u_instr ? {  instr[31:12]  } :
@@ -118,5 +121,19 @@ wire [6:0]func7;
   assign out_signal[42]=((is_m_instr)&&(func3==3'h5)) ? 1'b1 : 1'b0; //!divu
   assign out_signal[43]=((is_m_instr)&&(func3==3'h6)) ? 1'b1 : 1'b0; //!rem
   assign out_signal[44]=((is_m_instr)&&(func3==3'h7)) ? 1'b1 : 1'b0; //!remu
+
+   //!A extension Instructions
+
+   assign out_signal[45] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h02)) ? 1'b1 : 1'b0; // LR.W
+   assign out_signal[46] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h03)) ? 1'b1 : 1'b0; // SC.W
+   assign out_signal[47] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h01)) ? 1'b1 : 1'b0; // AMOSWAP.W
+   assign out_signal[48] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h00)) ? 1'b1 : 1'b0; // AMOADD.W
+   assign out_signal[49] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h0C)) ? 1'b1 : 1'b0; // AMOAND.W
+   assign out_signal[50] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h0A)) ? 1'b1 : 1'b0; // AMOOR.W
+   assign out_signal[51] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h04)) ? 1'b1 : 1'b0; // AMOXOR.W
+   assign out_signal[52] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h14)) ? 1'b1 : 1'b0; // AMOMAX.W
+   assign out_signal[53] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h10)) ? 1'b1 : 1'b0; // AMOMin.W
+   
+
 
 endmodule

@@ -5,7 +5,8 @@ module tb;
 reg clk, reset;
 wire [7:0] led;
 
-top uut (clk, reset, led[0], led[1], led[2], led[3], led[4], led[5], led[6], led[7] );
+top uut (clk, reset//, //led[0], led[1], led[2], led[3], led[4], led[5], led[6], led[7] 
+);
 
 initial begin
     $dumpfile("tb.vcd");
