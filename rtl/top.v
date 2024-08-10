@@ -14,13 +14,13 @@
 module top (
     input clk, reset);
 //! wire lines from other modules
-wire [7:0] led;
 wire [31:0] PC;
 assign ProgramCounter = PC;
 wire [31:0] Instr;
 wire MemWrite_rv32;
 wire [31:0] DataAdr_rv32, WriteData_rv32;
 wire [31:0] ReadData;
+
 
 //! instantiate processor and memories
 riscv_cpu rvsingle (clk, reset, PC, Instr, MemWrite_rv32, DataAdr_rv32, WriteData_rv32, ReadData);

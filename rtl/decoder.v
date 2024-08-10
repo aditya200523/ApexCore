@@ -25,7 +25,7 @@ module decoder(
    output rs2_valid,
 
    output [6:0] opcode,
-   output [53:0] out_signal
+   output [54:0] out_signal
    
     );
 
@@ -133,7 +133,8 @@ wire [4:0]func5;
    assign out_signal[51] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h04)) ? 1'b1 : 1'b0; // AMOXOR.W
    assign out_signal[52] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h14)) ? 1'b1 : 1'b0; // AMOMAX.W
    assign out_signal[53] = (is_a_instr && (func3 == 3'h2) && (func5 == 5'h10)) ? 1'b1 : 1'b0; // AMOMin.W
-   
+
+   assign out_signal[54] = ((opcode == 7'b0001111) && (func3 == 3'b0) && (func7 == 7'b0)) ? 1'b1 : 1'b0;
 
 
 endmodule
