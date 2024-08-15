@@ -1,5 +1,5 @@
 
-module csr #(parameter TRAP_ADDRESS = 0)
+module csr                                      // #(parameter TRAP_ADDRESS = 0)
 (
     input wire clk,                             //clock
     input wire rst,                             //reset
@@ -35,8 +35,8 @@ module csr #(parameter TRAP_ADDRESS = 0)
  reg mie_meie;                                //machine external interrupt enable
  reg mie_mtie;                                //machine timer interrupt enable
  reg mie_msie;                                //machine software interrupt enable
- reg[29:0] mtvec_base;                        //base field
- reg[1:0] mtvec_mode;                         //mode field
+ //reg[29:0] mtvec_base;                        //base field
+ //reg[1:0] mtvec_mode;                         //mode field
  reg mcause_bit;                              //interrupt(1) or exception(0)
  reg[3:0] mcause_event;                       //indicates event that caused the trap
  
@@ -58,6 +58,10 @@ module csr #(parameter TRAP_ADDRESS = 0)
                MCAUSE = 12'h342,
                MTVAL = 12'h343,
                MIP = 12'h344,
+
+//LOCALPARAM FOR MCAUSE 
+localparam     ECALL = 11,
+               EBREAK = 3;
                 
  case(out_signal)  //To indicate operation type. Coming from decoder
           case(out_signal)
@@ -112,8 +116,8 @@ initial begin
     mie_meie <= 0;
     mie_mtie <= 0;
     mie_msie <= 0;
-    mtvec_base <= TRAP_ADDRESS[31:2];
-    mtvec_mode <= TRAP_ADDRESS[1:0];
+   // mtvec_base <= TRAP_ADDRESS[31:2];
+    //mtvec_mode <= TRAP_ADDRESS[1:0];
     mcause_bit <= 0;
     mcause_event <= 0;
 end 
@@ -182,11 +186,15 @@ endcase
                 mie_mtie <= rdata[7]; 
                 mie_meie <= rdata[11]; 
             end  
+  
+  
   //MTVEC (trap vector configuration (base+mode))
-            if(csr_register == MTVEC) begin
-                mtvec_base <= rdata[31:2];
-                mtvec_mode <= rdata[1:0]; 
-            end
+            //if(csr_register == MTVEC) begin
+              //  mtvec_base <= rdata[31:2];
+                //mtvec_mode <= rdata[1:0]; 
+            //end
+  
+  
   //MCAUSE (indicates cause of trap(either interrupt or exception))
             
             if(i_csr_index == MCAUSE) begin
@@ -194,16 +202,15 @@ endcase
                mcause_event<= rdata[3:0];         
             end
 
-
-
-
-
-
-
-
-
-
-
+            if(go_to_trap && !trap_detected) begin
+                if(i_is_ecall) begin
+                mcause_event <= ECALL;
+                mcause_bit <= 0;
+            end
+                if(i_is_ebreak)
+                mcause_event <= EBREAK;
+                mcause_bit <= 0;
+            end 
 endmodule 
 
 
