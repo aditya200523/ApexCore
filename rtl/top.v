@@ -12,19 +12,62 @@
 */
 
 module top (
-    input clk, reset);
+    input clk_in, reset,
+    output led1, led2, led3, led4, led5, led6, led7, led8);
+
+
 //! wire lines from other modules
+wire [7:0] led;
 wire [31:0] PC;
 assign ProgramCounter = PC;
 wire [31:0] Instr;
 wire MemWrite_rv32;
 wire [31:0] DataAdr_rv32, WriteData_rv32;
 wire [31:0] ReadData;
+wire clk;
 
-
+clk_divider clk_0 (clk_in, reset, clk);
 //! instantiate processor and memories
 riscv_cpu rvsingle (clk, reset, PC, Instr, MemWrite_rv32, DataAdr_rv32, WriteData_rv32, ReadData);
 instr_mem imem (PC, Instr);
 data_mem dmem (clk, MemWrite_rv32, DataAdr_rv32, WriteData_rv32, ReadData);
 
+//output signals
+assign led[7:0] = WriteData_rv32[7:0];
+assign led[0] = led1;
+assign led[1] = led2;
+assign led[2] = led3;
+assign led[3] = led4;
+assign led[4] = led5;
+assign led[5] = led6;
+assign led[6] = led7;
+assign led[7] = led8;
+
+endmodule
+
+module clk_divider(
+    input wire clk_in,      // 100 MHz input clock
+    input wire reset,       // Asynchronous reset
+    output reg clk_out      // 1 Hz output clock
+);
+
+    // Calculate the number of clock cycles required
+    localparam integer DIVISOR = 25_000_000;
+
+    // Counter register
+    reg [26:0] counter; // 27 bits are sufficient to count up to 100,000,000
+
+    always @(posedge clk_in or posedge reset) begin
+        if (reset) begin
+            counter <= 0;
+            clk_out <= 0;
+        end else begin
+            if (counter == (DIVISOR - 1)) begin
+                counter <= 0;
+                clk_out <= ~clk_out; // Toggle the output clock
+            end else begin
+                counter <= counter + 1;
+            end
+        end
+    end
 endmodule
