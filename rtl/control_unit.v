@@ -534,7 +534,7 @@ always@(*) begin
 		endcase
 	end
 	
-	7'b101010 : begin
+	7'b1110011 : begin
 		case(out_signal)
 			60'h20000000000000:  if (addr != 12'h0)  begin 
 							// Read old value and store in rdata
@@ -566,7 +566,7 @@ always@(*) begin
 							// Set bits in CSR with immediate value
 							csr_data[addr] <= csr_data[addr] | Zimm;
 						end
-			60'h800000000000000: if (addr != 12'h0) begin
+			60'h400000000000000: if (addr != 12'h0) begin
 							// Read old value and store in rdata
 							rdata <= csr_data[addr];
 							// Clear bits in CSR with immediate value
