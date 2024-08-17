@@ -26,10 +26,7 @@ module PC(
     input reset,
     input j_signal,
     input [31:0] jump,
-    input trap_detected,       	   // Signal indicating an interrupt 
-    input [31:0] mtvec,            // Interrupt vector base address
-    input mret,                    // Signal for returning from interrupt
-    input [31:0] mepc,             // Address to return to after interrupt
+
     
     output reg [31:0] out_sign     // Program Counter output
 );
@@ -38,10 +35,6 @@ module PC(
     always @ (posedge clk) begin
         if (reset) begin
             next_pc <= 32'b0;
-        end else if (trap_detected) begin
-            next_pc <= mtvec;        // Redirect PC to interrupt handler
-        end else if (mret) begin
-            next_pc <= mepc;         // Return from interrupt
         end else if (j_signal) begin
             next_pc <= jump;         // Handle jump instructions
         end else begin

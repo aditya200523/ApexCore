@@ -27,7 +27,7 @@ module riscv_cpu (
 wire Jump_sign;
 wire [31:0] Jump_ADDR;
 wire [31:0] IMM_ADDR;
-wire [12:0] alu_instruction;
+wire [15:0] alu_instruction;
 wire [31:0] ProgramCounter;
 wire [31:0] source_val1;
 wire [31:0] source_val2;
@@ -43,6 +43,14 @@ wire [4:0] rs1;
 wire [4:0] rs2;
 wire [31:0] input_val1;
 wire [31:0] input_val2;
+wire [31:0] mtvec;
+wire [11:0] csr_addr;
+wire [31:0] csr_data;
+wire [31:0] csr_rdata;
+wire trap_detected;
+wire i_is_ebreak;
+wire mret;
+wire memory_busy;
 assign PC = ProgramCounter;
 PC b2v_inst(
     .clk(clk),
@@ -55,27 +63,41 @@ alu b2v_inst1(
     .in1(input_val1),
     .in2(input_val2),
     .ALUoutput(ALUoutput));
+csr csr_0 (
+    .clk(clk),
+    .rst(reset),
+    .addr(csr_addr),
+    .wr_data(csr_data),
+    .rdata(csr_rdata),
+    .i_is_ebreak(i_is_ebreak),
+    .i_is_ecall(i_is_ecall)
+);
 control_unit b2v_inst2(
     .clk(clk),
     .rst(reset),
-    .ALUoutput(ALUoutput),
-    .imm(IMM_ADDR),
-    .mem_read(ReadData),
-    .opcode(opcode),
-    .out_signal(out_signal),
-    .pc_input(ProgramCounter),
     .rs1_input(source_val1),
     .rs2_input(source_val2),
-    .j_signal(Jump_sign),
-    .wr_en_rf(registerfile_write),
-    .wr_en(MemWrite),
-    .addr(Mem_WrAddr),
-    .final_output(final_output),
+    .imm(IMM_ADDR),
+    .mem_read(ReadData),
+    .out_signal(out_signal),
+    .opcode(opcode),
+    .pc_input(ProgramCounter),
+    .ALUoutput(ALUoutput),
+    .memory_busy(memory_busy),
     .instructions(alu_instruction),
     .v1(input_val1),
     .v2(input_val2),
+    .mem_write(Mem_WrData),
+    .wr_en(MemWrite),
+    .addr(Mem_WrAddr),
+    .j_signal(Jump_sign),
     .jump(Jump_ADDR),
-    .mem_write(Mem_WrData));
+    .final_output(final_output),
+    .wr_en_rf(registerfile_write),
+    .csr_rdata(csr_rdata),
+    .csr_data(csr_data),
+    .csr_addr(csr_addr)
+);
 decoder b2v_inst3(
     .instr(Instr),
     .rs1_valid(rs1_valid),

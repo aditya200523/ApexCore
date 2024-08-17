@@ -39,6 +39,9 @@ module control_unit(
 	input [6:0] opcode,                                                                                         //!opcode for instructions from Rfile
 	input [31:0] pc_input,                                                                                      //!input from PC(its output address) 
 	input [63:0] ALUoutput,                                                                                     //!output from ALU
+	input memory_busy,
+	input i_is_ebreak,
+	input i_is_ecall,
 
 	output reg [15:0] instructions,																				//!instruction bus for ALU																									
 	output reg [31:0] v1,																						//!value going into ALU																													
@@ -50,13 +53,16 @@ module control_unit(
 	output reg [31:0] jump,                                                                                     //!jump output for pc
 	output reg [31:0] final_output,                                                                             //!goes into Rfile as rd
 	output reg wr_en_rf,
-	output reg [31:0] rdata,
-	output reg [31:0] csr_data
+	output reg [31:0] csr_rdata,
+	output reg [31:0] csr_data,
+	output reg [11:0] csr_addr
 	);
 reg [1:0] mem_count = 0;
 wire [31:0] Simm = 0;
 wire [31:0] Zimm = 0;
 reg [63:0] val = 0;
+reg fence_active = 0;
+reg execute_instruction = 0;
 initial begin 
 	wr_en_rf <= 0;
 	wr_en <= 0;
@@ -73,6 +79,20 @@ end
 assign Simm ={{20{imm[31]}},imm[31:20]};
 assign Zimm = {{28{1'b0}}, imm[31:29]};
 always@(*) begin
+	if (out_signal == 60'b0) begin
+		j_signal <= 1'b1;
+	end
+	if (!rst) begin
+        execute_instruction <= 1'b0;
+    end
+    else if (!fence_active || !memory_busy) begin
+        // Allow instruction execution if not in a fence or memory is idle
+        execute_instruction <= 1'b1;
+    end
+    else begin
+        // Pause instruction execution during the fence operation
+        execute_instruction <= 1'b0;
+    end
 	case(opcode)
 		7'b0110011, 7'b0010011 : begin
 			case (out_signal)
@@ -536,45 +556,53 @@ always@(*) begin
 	
 	7'b1110011 : begin
 		case(out_signal)
-			60'h20000000000000:  if (addr != 12'h0)  begin 
+			60'h20000000000000:  if (csr_addr != 12'h0)  begin 
 							// Read old value and store in rdata
-							rdata <= csr_data[addr];
+							csr_rdata <= csr_data[csr_addr];
 							// Write new value to CSR
-							csr_data[addr] <= rs1_input;
+							csr_data[csr_addr] <= rs1_input;
 						end
-			60'h40000000000000:  if (addr != 12'h0) begin
+			60'h40000000000000:  if (csr_addr != 12'h0) begin
 							// Read old value and store in rdata
-							rdata <= csr_data[addr];
+							csr_rdata <= csr_data[csr_addr];
 							// Set bits in CSR
-							csr_data[addr] <= csr_data[addr] | rs1_input;
+							csr_data[csr_addr] <= csr_data[csr_addr] | rs1_input;
 						end
-			60'h80000000000000:  if (addr != 12'h0) begin
+			60'h80000000000000:  if (csr_addr != 12'h0) begin
 							// Read old value and store in rdata
-							rdata <= csr_data[addr];
+							csr_rdata <= csr_data[csr_addr];
 							// Clear bits in CSR
-							csr_data[addr] <= csr_data[addr] & ~rs1_input;
+							csr_data[csr_addr] <= csr_data[csr_addr] & ~rs1_input;
 						end
-			60'h100000000000000: if (addr != 12'h0) begin
+			60'h100000000000000: if (csr_addr != 12'h0) begin
 							// Read old value and store in rdata
-							rdata <= csr_data[addr];
+							csr_rdata <= csr_data[csr_addr];
 							// Write immediate value to CSR
-							csr_data[addr] <= Zimm;
+							csr_data[csr_addr] <= Zimm;
 						end
-			60'h200000000000000:  if (addr != 12'h0) begin
+			60'h200000000000000:  if (csr_addr != 12'h0) begin
 							// Read old value and store in rdata
-							rdata <= csr_data[addr];
+							csr_rdata <= csr_data[csr_addr];
 							// Set bits in CSR with immediate value
-							csr_data[addr] <= csr_data[addr] | Zimm;
+							csr_data[csr_addr] <= csr_data[csr_addr] | Zimm;
 						end
 			60'h400000000000000: if (addr != 12'h0) begin
 							// Read old value and store in rdata
-							rdata <= csr_data[addr];
+							csr_rdata <= csr_data[addr];
 							// Clear bits in CSR with immediate value
-							csr_data[addr] <= csr_data[addr] & ~Zimm;
+							csr_data[csr_addr] <= csr_data[csr_addr] & ~Zimm;
 						end
 		endcase 
 	end
 
+	7'b0001111 : begin
+		if (out_signal == 60'h800000000000000) begin         // Activate fence logic when FENCE instruction is detected
+			fence_active <= 1'b1;
+			end
+		else if (fence_active && !memory_busy) begin         // Deactivate fence once all memory operations are completed
+			fence_active <= 1'b0;
+		end
+	end
 		endcase 
 	end
 endmodule
