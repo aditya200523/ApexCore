@@ -26,8 +26,6 @@ module PC(
     input reset,
     input j_signal,
     input [31:0] jump,
-
-    
     output reg [31:0] out_sign     // Program Counter output
 );
     reg [31:0] next_pc = 32'd0;
