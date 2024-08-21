@@ -33,7 +33,7 @@ wire [31:0] source_val1;
 wire [31:0] source_val2;
 wire [63:0] ALUoutput;
 wire [6:0] opcode;
-wire [59:0] out_signal;
+wire [60:0] out_signal;
 wire rs1_valid;
 wire rs2_valid;
 wire registerfile_write;
@@ -49,8 +49,6 @@ wire [31:0] csr_data;
 wire [31:0] csr_rdata;
 wire trap_detected;
 wire i_is_ebreak;
-wire mret;
-wire memory_busy;
 assign PC = ProgramCounter;
 PC b2v_inst(
     .clk(clk),
@@ -83,7 +81,6 @@ control_unit b2v_inst2(
     .opcode(opcode),
     .pc_input(ProgramCounter),
     .ALUoutput(ALUoutput),
-    .memory_busy(memory_busy),
     .instructions(alu_instruction),
     .v1(input_val1),
     .v2(input_val2),

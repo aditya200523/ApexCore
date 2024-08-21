@@ -26,7 +26,7 @@ module PC(
     input reset,
     input j_signal,
     input [31:0] jump,
-    output reg [31:0] out_sign     // Program Counter output
+    output [31:0] out_sign     // Program Counter output
 );
     reg [31:0] next_pc = 32'd0;
 
@@ -39,10 +39,5 @@ module PC(
             next_pc <= next_pc + 32'h4; // Increment PC for normal execution
         end
     end
-
-    always @ (posedge clk) begin
-        if (!reset) begin
-            out_sign <= next_pc;    // Output the current PC value
-        end
-    end
+    assign out_sign = next_pc;
 endmodule

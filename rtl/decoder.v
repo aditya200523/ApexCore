@@ -25,7 +25,7 @@ module decoder(
    output rs2_valid,
 
    output [6:0] opcode,
-   output [59:0] out_signal
+   output [60:0] out_signal
    
     );
 
@@ -47,7 +47,7 @@ wire [4:0]func5;
     assign rs2= (is_r_instr || is_s_instr || is_b_instr || is_a_instr) ? instr[24:20] :  0;
     assign rs1= (is_r_instr || is_s_instr || is_b_instr || is_i_instr || is_a_instr) ? instr[19:15]: 0;
     assign rd= (is_r_instr || is_u_instr || is_j_instr || is_i_instr || is_a_instr) ? instr[11:7] : 0;
-    assign func3= (is_r_instr || is_s_instr || is_b_instr || is_i_instr) ? instr[14:12] : 0;
+    assign func3= (is_a_instr || is_r_instr || is_s_instr || is_b_instr || is_i_instr || is_m_instr) ? instr[14:12] : 0;
     assign func7= is_r_instr ? instr[31:25] : 0;
     assign func5 = is_a_instr ? instr[31:27] : 0;
 
@@ -141,6 +141,8 @@ wire [4:0]func5;
     assign out_signal[57] = ((opcode == 7'b1110011) && (func3 == 3'b101)) ? 1'b1 : 1'b0;     //CSRRWI
     assign out_signal[58] = ((opcode == 7'b1110011) && (func3 == 3'b110)) ? 1'b1 : 1'b0;     //CSRRSI
     assign out_signal[59] = ((opcode == 7'b1110011) && (func3 == 3'b111)) ? 1'b1 : 1'b0;     //CSRRCI
+
+    assign out_signal[60] = ((opcode == 7'b0001111) && (func3 == 3'd0)) ? 1'b1 : 1'b0;     //FENCE
 
 
 
