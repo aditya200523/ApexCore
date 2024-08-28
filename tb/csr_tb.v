@@ -17,9 +17,13 @@ wire trap_detected;
 csr dut (
     .clk(clk),
     .rst(rst),
+    .csr_wr_en(csr_wr_en),
+    .csr_ren(csr_ren),
     .addr(addr),
     .wr_data(wr_data),
     .rdata(rdata),
+    .i_is_ebreak(i_is_ebreak),
+    .i_is_ecall(i_is_ecall),
     .trap_detected(trap_detected)
 );
 

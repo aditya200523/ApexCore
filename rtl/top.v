@@ -12,33 +12,21 @@
 */
 
 module top (
-    input clk, reset,
-    output led1, led2, led3, led4, led5, led6, led7, led8);
+    input   clk, 
+            reset 
+);
 
 
-//! wire lines from other modules
-wire [7:0] led;
 wire [31:0] PC;
-assign ProgramCounter = PC;
 wire [31:0] Instr;
-wire MemWrite_rv32;
+wire        MemWrite_rv32;
 wire [31:0] DataAdr_rv32, WriteData_rv32;
 wire [31:0] ReadData;
 
-//! instantiate processor and memories
-riscv_cpu rvsingle (clk, reset, PC, Instr, MemWrite_rv32, DataAdr_rv32, WriteData_rv32, ReadData);
-instr_mem imem (PC, Instr);
-data_mem dmem (clk, MemWrite_rv32, DataAdr_rv32, WriteData_rv32, ReadData);
+assign ProgramCounter = PC;
 
-//output signals
-assign led[7:0] = WriteData_rv32[7:0];
-assign led[0] = led1;
-assign led[1] = led2;
-assign led[2] = led3;
-assign led[3] = led4;
-assign led[4] = led5;
-assign led[5] = led6;
-assign led[6] = led7;
-assign led[7] = led8;
+riscv_cpu rvsingle  (.clk(clk), .reset(reset), .PC(PC), .Instr(Instr), .MemWrite(MemWrite_rv32), .Mem_WrAddr(DataAdr_rv32), .Mem_WrData(WriteData_rv32), .ReadData(ReadData));
+instr_mem imem      (PC, Instr);
+data_mem dmem       (clk, MemWrite_rv32, DataAdr_rv32, WriteData_rv32, ReadData);
 
 endmodule

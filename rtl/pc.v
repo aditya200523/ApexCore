@@ -14,30 +14,23 @@
  */
 
 
-//The address of the interrupt is stored in the mtvec 
-//mret is the signal confirming return from interrupt 
-//mepc is the one where the address after interrupt is stored
-
 
 
 
 module PC(
-    input clk,
-    input reset,
-    input j_signal,
-    input [31:0] jump,
-    output [31:0] out_sign     // Program Counter output
+    input           clk,
+    input           reset,
+    input           j_signal,
+    input   [31:0]  jump,
+    output  [31:0]  out_sign     
 );
     reg [31:0] next_pc = 32'd0;
 
     always @ (posedge clk) begin
-        if (reset) begin
-            next_pc <= 32'b0;
-        end else if (j_signal) begin
-            next_pc <= jump;         // Handle jump instructions
-        end else begin
-            next_pc <= next_pc + 32'h4; // Increment PC for normal execution
-        end
+        if      (reset)     next_pc <= 32'b0;
+        else if (j_signal)  next_pc <= jump;
+        else                next_pc <= next_pc + 32'h4;
     end
+    
     assign out_sign = next_pc;
 endmodule

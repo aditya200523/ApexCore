@@ -17,9 +17,9 @@
  */
  
 module led (
-    input clk,
-    input [7:0] led,
-    output reg led1, led2, led3, led4, led5, led6, led7, led8
+    input               clk,
+    input       [7:0]   led,
+    output reg          led1, led2, led3, led4, led5, led6, led7, led8
 );
 initial begin
     led1 <= 0;

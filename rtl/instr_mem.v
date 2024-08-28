@@ -17,12 +17,8 @@ module instr_mem #(parameter DATA_WIDTH = 32, ADDR_WIDTH = 32, MEM_SIZE = 512) (
     output      [DATA_WIDTH-1:0] instr
 );
 
-//! array of 64 32-bit words or instructions
-reg [DATA_WIDTH-1:0] instr_ram [0:MEM_SIZE-1];
-initial $readmemh({"/home/shrivishakh/ApexCore_hardware_tests/ApexCore_hardware_tests.sim/sim_1/behav/xsim/program_dump.hex"}, instr_ram);
-
-//! word-aligned memory access
-//! combinational read logic
-assign instr = instr_ram[instr_addr[31:2]];
+reg [DATA_WIDTH-1:0]    instr_ram [0:MEM_SIZE-1];
+initial                 $readmemh({"program_dump.hex"}, instr_ram);
+assign instr    =       instr_ram[instr_addr[31:2]];
 
 endmodule
