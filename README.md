@@ -1,4 +1,4 @@
-# ApexCore-Eklavya'24
+# APEXCORE - A RISC-V BASED CPU CORE : EKLAVYA'24
 ---
 
 #### The RISC-V CPU will be implemented with IMAF instruction extensions, and also verified using custom verification methods.
