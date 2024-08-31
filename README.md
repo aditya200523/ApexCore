@@ -55,14 +55,12 @@ Following is the block diagram and workflow in simple terms of our CPU:-
 ### Tech Stack
 
 - Verilog
-- Vivado
-- Modelsim Altera
-- Lattice Framework 
+- Xilinx Vivado 
 ---
 ### Future Work
-- [ ] Fix issues with Seven Segment Display
-- [ ] Verify CPU output with every cases, possible, edge and false cases.
-- [ ] Implement a UART module to enable write compatibility in Instruction memory. 
+- [ ] Interrupt handling.
+- [ ] UART implmentation.
+- [ ] Implementation of remaining extensions.
 ---
 ## Contributors
 
@@ -70,12 +68,13 @@ Following is the block diagram and workflow in simple terms of our CPU:-
 - [Atharva Kashalkar](https://github.com/RapidRoger18)
 - [Aditya Mahajan](https://github.com/aditya200523)
 - [Shri Vishakh Devanand](https://github.com/LOuLOu-THEKing)
-- [Shaurya Rane](https://github.com/shauryarane05)
+  
 
 
 ---
 ### Acknowledgements and Resources
 
 - [SRA VJTI Eklavya 2024](https://sravjti.in/)
+  
   
 ---
