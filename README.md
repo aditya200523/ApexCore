@@ -1,7 +1,7 @@
 # APEXCORE - A RISC-V BASED CPU CORE : EKLAVYA'24
 ---
 
-#### The RISC-V CPU will be implemented with IMAF instruction extensions, and also verified using custom verification methods.
+#### The RISC-V CPU will be implemented with Multiplication and Atomic Extension. Implementation of Control and Status Registers along with memory segmentation in Data Memory for Input-Ouput capability.
 
 ---
 ### Introduction
@@ -17,7 +17,7 @@ To flash the code in your FPGA, you must have first have yosys suite installed. 
 
 After installation, navigate to your cloned repository and into the code folder
 ```
-$ cd RISC-V-Eklavya-23/code
+$ cd RISC-V-Eklavya-24/code
 ```
 
 and run following command 
